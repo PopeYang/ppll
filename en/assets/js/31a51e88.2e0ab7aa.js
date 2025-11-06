@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkppll=globalThis.webpackChunkppll||[]).push([[6567],{9817:l=>{l.exports=JSON.parse('{"metadata":{"permalink":"/ppll/en/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":4,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);

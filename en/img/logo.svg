@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+ <title id="title">ppll logo — colorful tiles (fixed)</title>
+ <desc id="desc">Square logo with four rounded colorful tiles containing stylized letters p p l l</desc>
+ 
+ <defs>
+ <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+ <feOffset in="SourceAlpha" dx="0" dy="6" result="off"/>
+ <feGaussianBlur in="off" stdDeviation="8" result="blur"/>
+ <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" result="shadow"/>
+ <feBlend in="SourceGraphic" in2="shadow" mode="normal"/>
+ </filter>
+ </defs>
+ 
+ <!-- background -->
+ <rect width="512" height="512" rx="48" fill="#FFF9F0"/>
+ 
+ <!-- top-left: first 'p' -->
+ <g transform="translate(28,28) rotate(-6 110 110)" filter="url(#shadow)">
+ <rect width="220" height="220" rx="28" fill="#FF6B6B"/>
+ <g transform="translate(110,110)" fill="#ffffff">
+ <rect x="-52" y="-40" width="36" height="120" rx="18"/>
+ <circle cx="8" cy="-6" r="44"/>
+ </g>
+ </g>
+ 
+ <!-- top-right: second 'p' (FIXED, not mirrored) -->
+ <g transform="translate(260,28) rotate(5 110 110)" filter="url(#shadow)">
+ <rect width="220" height="220" rx="28" fill="#FFD166"/>
+ <g transform="translate(110,110)" fill="#ffffff">
+ <rect x="-52" y="-40" width="36" height="120" rx="18"/>
+ <circle cx="8" cy="-6" r="44"/>
+ </g>
+ </g>
+ 
+ <!-- bottom-left: first 'l' -->
+ <g transform="translate(28,260) rotate(4 110 110)" filter="url(#shadow)">
+ <rect width="220" height="220" rx="28" fill="#06D6A0"/>
+ <g transform="translate(110,110)" fill="#ffffff">
+ <rect x="-16" y="-62" width="36" height="140" rx="12"/>
+ </g>
+ </g>
+ 
+ <!-- bottom-right: second 'l' -->
+ <g transform="translate(260,260) rotate(-4 110 110)" filter="url(#shadow)">
+ <rect width="220" height="220" rx="28" fill="#4D96FF"/>
+ <g transform="translate(110,110)" fill="#ffffff">
+ <rect x="-16" y="-62" width="36" height="140" rx="12"/>
+ </g>
+ </g>
+ 
+ </svg>
