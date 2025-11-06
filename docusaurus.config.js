@@ -10,7 +10,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: '破破烂烂的小博客',
+  title: '破破烂烂小博客',
   tagline: 'by ppy',
   favicon: 'img/favicon.ico',
 
