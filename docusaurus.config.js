@@ -30,6 +30,8 @@ const config = {
   organizationName: 'popeyang', // Usually your GitHub org/user name.
   projectName: 'ppll', // Usually your repo name.
 
+  trailingSlash: false,
+
   onBrokenLinks: 'throw',
 
   // Even if you don't use internationalization, you can use this field to set
