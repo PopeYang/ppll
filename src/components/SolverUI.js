@@ -1,46 +1,71 @@
 import React, { useState } from 'react';
 
-// [!] 关键: 你的 API 服务器地址
+// 你的 API 服务器地址
 const API_URL = 'http://Hyakkaou.pythonanywhere.com/solve';
 
-// 这是 React 组件, 而不是一个完整的页面
+// --- 新的配置 ---
+
+// 1. 定义方块的默认数量
+const initialPieceCounts = {
+    L3: 0,
+    L4: 2,
+    I4: 2,
+    O4: 1,
+    T4: 2,
+    Z4: 2,
+};
+
+// 2. 定义 UI 配置 (包括 Emoji)
+const shapeConfig = [
+    { key: 'L3', label: 'L3 (3格L)', emoji: '📐' },
+    { key: 'L4', label: 'L4 (4格L)', emoji: '🟪' },
+    { key: 'I4', label: 'I4 (直线)', emoji: '🟦' },
+    { key: 'O4', label: 'O4 (方形)', emoji: '🟨' },
+    { key: 'T4', label: 'T4 (T形)', emoji: '🟣' },
+    { key: 'Z4', label: 'Z4 (Z形)', emoji: '🟥' },
+];
+
+// --- React 组件 ---
+
 export default function SolverUI() {
     // --- State (状态) ---
     const [width, setWidth] = useState(6);
     const [height, setHeight] = useState(6);
-    // [!] 我们把默认 pieces 放在一个变量里, 方便复用
-    const defaultPieces = '{"L4": 2, "I4": 2, "O4": 1, "T4": 2, "Z4": 2}';
-    const [pieces, setPieces] = useState(defaultPieces);
 
-    const [solution, setSolution] = useState(null); // 存储结果
-    const [error, setError] = useState(null);       // 存储错误信息
-    const [isLoading, setIsLoading] = useState(false); // 存储加载状态
+    // [!] 使用新 state 替换旧的 'pieces' 字符串
+    const [pieceCounts, setPieceCounts] = useState(initialPieceCounts);
 
-    // --- API 调用函数 ---
+    const [solution, setSolution] = useState(null);
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    // --- 事件处理 ---
+
+    // 处理单个方块数量变化的函数
+    const handlePieceCountChange = (key, value) => {
+        // 确保输入是数字, 最小为 0
+        const newCount = Math.max(0, parseInt(value, 10) || 0);
+        setPieceCounts(prevCounts => ({
+            ...prevCounts,
+            [key]: newCount,
+        }));
+    };
+
+    // handleSubmit 使用 pieceCounts 对象, 而不是 JSON 字符串
     const handleSubmit = async (event) => {
-        event.preventDefault(); // 阻止表单默认提交
+        event.preventDefault();
         setIsLoading(true);
         setSolution(null);
         setError(null);
 
-        let piecesJson;
-        try {
-            // 1. 验证和解析 Pieces JSON
-            piecesJson = JSON.parse(pieces);
-        } catch (e) {
-            setError('Pieces 字段的 JSON 格式错误: ' + e.message);
-            setIsLoading(false);
-            return;
-        }
-
-        // 2. 准备要发送的数据
+        // 准备要发送的数据
         const payload = {
             width: parseInt(width, 10),
             height: parseInt(height, 10),
-            pieces: piecesJson,
+            pieces: pieceCounts,
         };
 
-        // 3. 发送 fetch 请求
+        // 发送 fetch 请求
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
@@ -50,77 +75,111 @@ export default function SolverUI() {
                 body: JSON.stringify(payload),
             });
 
-            // [!] 检查响应是否 OK (e.g., 500 错误)
             if (!response.ok) {
                 throw new Error(`API 请求失败, 状态码: ${response.status}`);
             }
-
             const data = await response.json();
-
             if (data.status === 'success') {
-                setSolution(data.solution); // 成功
+                setSolution(data.solution);
             } else {
-                setError(data.message); // API 返回的失败 (e.g., "No solution found")
+                setError(data.message);
             }
         } catch (e) {
-            // 网络错误或 CORS 错误会在这里捕获
             setError('请求失败: ' + e.message + ' (请检查CORS或网络连接)');
         }
 
         setIsLoading(false);
     };
 
-    // --- 重置函数 ---
+    // handleReset 重置 pieceCounts 对象
     const handleReset = () => {
         setWidth(6);
         setHeight(6);
-        setPieces(defaultPieces);
+        setPieceCounts(initialPieceCounts);
         setSolution(null);
         setError(null);
         setIsLoading(false);
     }
 
     // --- UI (界面) ---
-    // 注意: 这里没有 <Layout> 标签, 只是组件本身
     return (
         <div style={{ padding: '1rem 0' }}>
             <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '1rem' }}>
-                    <label>宽度 (Width): </label>
-                    <input
-                        type="number"
-                        value={width}
-                        onChange={(e) => setWidth(e.target.value)}
-                        required
-                        style={{ marginLeft: '0.5rem' }}
-                    />
-                </div>
-                <div style={{ marginBottom: '1rem' }}>
-                    <label>高度 (Height): </label>
-                    <input
-                        type="number"
-                        value={height}
-                        onChange={(e) => setHeight(e.target.value)}
-                        required
-                        style={{ marginLeft: '0.5rem' }}
-                    />
-                </div>
-                <div style={{ marginBottom: '1rem' }}>
-                    <label>方块 (Pieces JSON): </label>
-                    <textarea
-                        value={pieces}
-                        onChange={(e) => setPieces(e.target.value)}
-                        rows={5}
-                        style={{
-                            width: '100%',
-                            fontFamily: 'monospace',
-                            display: 'block',
-                            marginTop: '0.5rem'
-                        }}
-                        required
-                    />
+
+                {/* --- 宽度和高度 (一行) --- */}
+                <div style={{
+                    display: 'flex',
+                    flexWrap: 'wrap', // 移动端换行
+                    gap: '1.5rem',
+                    marginBottom: '1.5rem'
+                }}>
+                    <div>
+                        <label style={{ marginRight: '0.5rem', fontWeight: 'bold' }}>
+                            宽度 (Width):
+                        </label>
+                        <input
+                            type="number"
+                            min="1"
+                            value={width}
+                            onChange={(e) => setWidth(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                            required
+                            style={{ width: '80px' }}
+                        />
+                    </div>
+                    <div>
+                        <label style={{ marginRight: '0.5rem', fontWeight: 'bold' }}>
+                            高度 (Height):
+                        </label>
+                        <input
+                            type="number"
+                            min="1"
+                            value={height}
+                            onChange={(e) => setHeight(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                            required
+                            style={{ width: '80px' }}
+                        />
+                    </div>
                 </div>
 
+                {/* --- 方块数量输入 (网格布局) --- */}
+                <label style={{ display: 'block', marginBottom: '1rem', fontWeight: 'bold' }}>
+                    方块数量 (Pieces):
+                </label>
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', // 响应式网格
+                    gap: '1rem',
+                    marginBottom: '2rem',
+                }}>
+                    {shapeConfig.map(shape => (
+                        <div key={shape.key} style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '0.75rem',
+                            borderRadius: 'var(--ifm-code-border-radius)',
+                            border: '1px solid var(--ifm-color-emphasis-300)',
+                            backgroundColor: 'var(--ifm-background-color-secondary)'
+                        }}>
+                            <label htmlFor={shape.key} style={{ fontWeight: '500' }}>
+                                <span style={{ fontSize: '1.75rem', marginRight: '0.75rem', verticalAlign: 'middle' }}>
+                                    {shape.emoji}
+                                </span>
+                                {shape.label}:
+                            </label>
+                            <input
+                                id={shape.key}
+                                type="number"
+                                min="0"
+                                value={pieceCounts[shape.key]}
+                                onChange={(e) => handlePieceCountChange(shape.key, e.target.value)}
+                                style={{ width: '70px', fontSize: '1rem', textAlign: 'center' }}
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                {/* --- 按钮 --- */}
                 <button type="submit" className="button button--primary" disabled={isLoading}>
                     {isLoading ? '正在计算...' : '求解'}
                 </button>
@@ -144,7 +203,8 @@ export default function SolverUI() {
                         padding: '1rem',
                         lineHeight: '1.5',
                         fontSize: '1.5rem',
-                        overflowX: 'auto'
+                        overflowX: 'auto',
+                        borderRadius: 'var(--ifm-code-border-radius)'
                     }}>
                         {solution.join('\n')}
                     </pre>
@@ -156,7 +216,7 @@ export default function SolverUI() {
                 <div style={{ marginTop: '2rem' }}>
                     <h3>错误</h3>
                     <div style={{
-                        backgroundColor: 'var(--ifm-background-color-danger-dark)', // Docusaurus 警告色
+                        backgroundColor: 'var(--ifm-background-color-danger-dark)',
                         color: 'white',
                         padding: '1rem',
                         borderRadius: 'var(--ifm-code-border-radius)'
