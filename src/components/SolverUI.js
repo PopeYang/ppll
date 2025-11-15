@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 
 // 你的 API 服务器地址
-const API_URL = 'http://Hyakkaou.pythonanywhere.com/solve';
+const API_URL = 'https://Hyakkaou.pythonanywhere.com/solve';
 
-// --- 新的配置 ---
-
-// 1. 定义方块的默认数量
+// --- 定义方块的默认数量 ---
 const initialPieceCounts = {
     L3: 0,
     L4: 2,
@@ -15,7 +13,7 @@ const initialPieceCounts = {
     Z4: 2,
 };
 
-// 2. 定义 UI 配置 (包括 Emoji)
+// --- 定义 UI 配置 (包括 Emoji) ---
 const shapeConfig = [
     { key: 'L3', label: 'L3 (3格L)', emoji: '📐' },
     { key: 'L4', label: 'L4 (4格L)', emoji: '🟪' },
@@ -31,19 +29,15 @@ export default function SolverUI() {
     // --- State (状态) ---
     const [width, setWidth] = useState(6);
     const [height, setHeight] = useState(6);
-
-    // [!] 使用新 state 替换旧的 'pieces' 字符串
     const [pieceCounts, setPieceCounts] = useState(initialPieceCounts);
 
     const [solution, setSolution] = useState(null);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    // --- 事件处理 ---
+    // --- 事件处理 (这部分逻辑不变) ---
 
-    // 处理单个方块数量变化的函数
     const handlePieceCountChange = (key, value) => {
-        // 确保输入是数字, 最小为 0
         const newCount = Math.max(0, parseInt(value, 10) || 0);
         setPieceCounts(prevCounts => ({
             ...prevCounts,
@@ -51,21 +45,18 @@ export default function SolverUI() {
         }));
     };
 
-    // handleSubmit 使用 pieceCounts 对象, 而不是 JSON 字符串
     const handleSubmit = async (event) => {
         event.preventDefault();
         setIsLoading(true);
         setSolution(null);
         setError(null);
 
-        // 准备要发送的数据
         const payload = {
             width: parseInt(width, 10),
             height: parseInt(height, 10),
             pieces: pieceCounts,
         };
 
-        // 发送 fetch 请求
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
@@ -91,7 +82,6 @@ export default function SolverUI() {
         setIsLoading(false);
     };
 
-    // handleReset 重置 pieceCounts 对象
     const handleReset = () => {
         setWidth(6);
         setHeight(6);
@@ -109,12 +99,17 @@ export default function SolverUI() {
                 {/* --- 宽度和高度 (一行) --- */}
                 <div style={{
                     display: 'flex',
-                    flexWrap: 'wrap', // 移动端换行
+                    flexWrap: 'wrap',
                     gap: '1.5rem',
-                    marginBottom: '1.5rem'
+                    marginBottom: '1.5rem',
+                    alignItems: 'center', // [!] 确保标签和增大的输入框垂直对齐
                 }}>
                     <div>
-                        <label style={{ marginRight: '0.5rem', fontWeight: 'bold' }}>
+                        <label style={{
+                            marginRight: '0.5rem',
+                            fontWeight: 'bold',
+                            fontSize: '1.1rem', // [!] 增大标签字体
+                        }}>
                             宽度 (Width):
                         </label>
                         <input
@@ -123,11 +118,21 @@ export default function SolverUI() {
                             value={width}
                             onChange={(e) => setWidth(Math.max(1, parseInt(e.target.value, 10) || 1))}
                             required
-                            style={{ width: '80px' }}
+                            style={{
+                                width: '100px',     // [!] 加宽
+                                fontSize: '1.25rem',  // [!] 增大字体
+                                padding: '0.5rem',    // [!] 增加内边距
+                                textAlign: 'center',  // [!] 文本居中
+                                fontWeight: 'bold',   // [!] 文本加粗
+                            }}
                         />
                     </div>
                     <div>
-                        <label style={{ marginRight: '0.5rem', fontWeight: 'bold' }}>
+                        <label style={{
+                            marginRight: '0.5rem',
+                            fontWeight: 'bold',
+                            fontSize: '1.1rem', // [!] 增大标签字体
+                        }}>
                             高度 (Height):
                         </label>
                         <input
@@ -136,18 +141,29 @@ export default function SolverUI() {
                             value={height}
                             onChange={(e) => setHeight(Math.max(1, parseInt(e.target.value, 10) || 1))}
                             required
-                            style={{ width: '80px' }}
+                            style={{
+                                width: '100px',     // [!] 加宽
+                                fontSize: '1.25rem',  // [!] 增大字体
+                                padding: '0.5rem',    // [!] 增加内边距
+                                textAlign: 'center',  // [!] 文本居中
+                                fontWeight: 'bold',   // [!] 文本加粗
+                            }}
                         />
                     </div>
                 </div>
 
                 {/* --- 方块数量输入 (网格布局) --- */}
-                <label style={{ display: 'block', marginBottom: '1rem', fontWeight: 'bold' }}>
-                    方块数量 (Pieces):
+                <label style={{
+                    display: 'block',
+                    marginBottom: '1rem',
+                    fontWeight: 'bold',
+                    fontSize: '1.1rem', // [!] 增大标签字体
+                }}>
+                    方块数据 (Pieces):
                 </label>
                 <div style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', // 响应式网格
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', // [!] 稍微加宽最小列宽
                     gap: '1rem',
                     marginBottom: '2rem',
                 }}>
@@ -161,8 +177,15 @@ export default function SolverUI() {
                             border: '1px solid var(--ifm-color-emphasis-300)',
                             backgroundColor: 'var(--ifm-background-color-secondary)'
                         }}>
-                            <label htmlFor={shape.key} style={{ fontWeight: '500' }}>
-                                <span style={{ fontSize: '1.75rem', marginRight: '0.75rem', verticalAlign: 'middle' }}>
+                            <label htmlFor={shape.key} style={{
+                                fontWeight: '500',
+                                fontSize: '1.1rem', // [!] 增大标签字体
+                            }}>
+                                <span style={{
+                                    fontSize: '1.75rem',
+                                    marginRight: '0.75rem',
+                                    verticalAlign: 'middle'
+                                }}>
                                     {shape.emoji}
                                 </span>
                                 {shape.label}:
@@ -173,13 +196,19 @@ export default function SolverUI() {
                                 min="0"
                                 value={pieceCounts[shape.key]}
                                 onChange={(e) => handlePieceCountChange(shape.key, e.target.value)}
-                                style={{ width: '70px', fontSize: '1rem', textAlign: 'center' }}
+                                style={{
+                                    width: '80px',      // [!] 加宽
+                                    fontSize: '1.25rem',  // [!] 增大字体
+                                    padding: '0.5rem',    // [!] 增加内边距
+                                    textAlign: 'center',  // [!] 文本居中
+                                    fontWeight: '500',    // [!] 文本加粗
+                                }}
                             />
                         </div>
                     ))}
                 </div>
 
-                {/* --- 按钮 --- */}
+                {/* --- 按钮 (不变) --- */}
                 <button type="submit" className="button button--primary" disabled={isLoading}>
                     {isLoading ? '正在计算...' : '求解'}
                 </button>
@@ -194,7 +223,7 @@ export default function SolverUI() {
                 </button>
             </form>
 
-            {/* --- 结果显示区 --- */}
+            {/* --- 结果显示区 (不变) --- */}
             {solution && (
                 <div style={{ marginTop: '2rem' }}>
                     <h3>求解成功!</h3>
@@ -211,7 +240,7 @@ export default function SolverUI() {
                 </div>
             )}
 
-            {/* --- 错误显示区 --- */}
+            {/* --- 错误显示区 (不变) --- */}
             {error && (
                 <div style={{ marginTop: '2rem' }}>
                     <h3>错误</h3>
