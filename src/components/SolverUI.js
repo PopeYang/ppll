@@ -4,12 +4,13 @@ const API_URL = "https://Hyakkaou.pythonanywhere.com/solve";
 
 // 默认方块数量
 const initialPieceCounts = {
-    L3: 0,
+    L3: 1,
     L4: 2,
-    I4: 2,
+    I4: 1,
     O4: 1,
-    T4: 2,
+    T4: 1,
     Z4: 2,
+    C5: 1,
 };
 
 // UI 配置
@@ -20,6 +21,7 @@ const shapeConfig = [
     { key: "O4", label: "O4", emoji: "🟨" },
     { key: "T4", label: "T4", emoji: "🟣" },
     { key: "Z4", label: "Z4", emoji: "🟥" },
+    { key: "C5", label: "C5", emoji: "🟧" },
 ];
 
 export default function SolverUI() {
