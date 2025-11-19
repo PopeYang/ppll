@@ -4,8 +4,9 @@ const API_URL = "https://Hyakkaou.pythonanywhere.com/solve";
 
 // 默认方块数量
 const initialPieceCounts = {
+    I2: 2,
     L3: 1,
-    L4: 2,
+    L4: 1,
     I4: 1,
     O4: 1,
     T4: 1,
