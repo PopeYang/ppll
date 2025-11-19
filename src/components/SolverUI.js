@@ -15,6 +15,7 @@ const initialPieceCounts = {
 
 // UI 配置
 const shapeConfig = [
+    { key: "I2", label: "I2", emoji: "🟩" },
     { key: "L3", label: "L3", emoji: "📐" },
     { key: "L4", label: "L4", emoji: "🟪" },
     { key: "I4", label: "I4", emoji: "🟦" },
