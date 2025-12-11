@@ -74,3 +74,29 @@ sudo chmod 600 /data/gitlab/ssl/*.key
 之后比较麻烦的就是要修改rb文件里面的配置, 学会了nano编辑器的退出,  `Ctrl+O, Enter, Ctrl+X` , 之前都是vim的 `Esc + :wq`
 
 至此GitLab在局域网内可以访问了☕
+
+![GitLab登陆成功](images/gitlab.png)
+
+## 启用 GitLab Pages
+
+GitLab Pages 需要额外配置。首先，确保在 `gitlab.rb` 文件中启用了 Pages 服务：
+
+```ruby
+# GitLab Pages
+
+# 1. 设置 Pages 的外部域名 (即使在内部不配置 SSL，这里也要写 https，为了生成的链接正确)
+pages_external_url "https://pages.xxx.com.cn"
+
+# 2. 启用 Pages 核心服务
+gitlab_pages['enable'] = true
+
+# 3. 【关键】禁用 Pages 自带的 Nginx (避免冲突)
+pages_nginx['enable'] = false
+
+# 4. 【关键】让 Pages 服务直接监听所有网卡的 8090 端口
+# 这样你才能从宿主机通过 docker 端口映射访问到它
+gitlab_pages['listen_proxy'] = "0.0.0.0:8090"
+
+# 5. 告诉 Pages 不要自己在内部搞 SSL (因为外部 Nginx 会处理)
+gitlab_pages['inplace_chroot'] = true
+```
