@@ -100,3 +100,62 @@ gitlab_pages['listen_proxy'] = "0.0.0.0:8090"
 # 5. 告诉 Pages 不要自己在内部搞 SSL (因为外部 Nginx 会处理)
 gitlab_pages['inplace_chroot'] = true
 ```
+
+## 配置 GitLab Runner
+
+GitLab的CI/CD依赖runner来执行任务, 计划在一台Windows机器上部署runner, 我的Pages使用Docusaurus, 准备对应的node环境.
+
+在Windows上使用PowerShell安装环境:
+
+```powershell
+winget install OpenJS.NodeJS.LTS
+```
+
+通过`node -v` 和 `npm -v` 查看版本确认安装成功.
+
+```bash
+C:\Users\ppll>node -v
+v24.11.1
+
+C:\Users\>npm -v
+11.6.2
+```
+
+然后开始安装GitLab Runner, PowerShell 管理员权限执行:
+
+```powershell
+Invoke-WebRequest -Uri https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-windows-amd64.exe -OutFile gitlab-runner.exe
+```
+
+安装
+
+```powershell
+.\gitlab-runner.exe install
+```
+
+启动
+
+```powershell
+.\gitlab-runner.exe start
+```
+
+查看状态
+
+```powershell
+PS C:\Windows\system32> Invoke-WebRequest -Uri https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-windows-amd64.exe -OutFile gitlab-runner.exe
+PS C:\Windows\system32> .\gitlab-runner.exe install
+Runtime platform                                    arch=amd64 os=windows pid=43444 revision=df85dadf version=18.6.6
+PS C:\Windows\system32> .\gitlab-runner.exe start
+Runtime platform                                    arch=amd64 os=windows pid=33268 revision=df85dadf version=18.6.6
+PS C:\Windows\system32> Get-Service gitlab-runner
+
+Status   Name               DisplayName
+------   ----               -----------
+Running  gitlab-runner      gitlab-runner
+```
+
+然后进入GitLab的网页端, 新建Group, 新建Project, 进入项目右上角的
+
+> Project Settings -> CI/CD -> Runners -> Create project runner
+
+复制注册命令, 在PowerShell中执行注册命令, 命名, 操作选择Shell, 完成注册.
