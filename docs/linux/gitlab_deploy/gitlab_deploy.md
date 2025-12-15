@@ -48,7 +48,37 @@ docker-compose version 1.29.2, build unknown
 
 给当前用户 `$USER` 加 Docker 权限 `sudo usermod -aG docker $USER` , ssh重连, 可以避免每次都输入密码.
 
-然后被告知服务器网络连接各种受限, 只能本地拉取镜像, 然后上传到服务器. 本地Windows上 `docker pull gitlab/gitlab-ce:latest` , 等待拉取完成之后, `docker images | grep gitlab` 查看镜像ID, 然后 `docker save gitlab/gitlab-ce:latest -o gitlab-ce-latest.tar` 保存为tar文件, 通过堡垒机的SFTP上传到服务器的data路径下, `cd data` -> `ls -lh gitlab-ce-latest.tar` 确认文件在这, 然后 `docker load -i gitlab-ce-latest.tar` 加载镜像,之后 `cd ~/gitlab-docker` 和 `docker-compose up -d` 启动容器.
+然后被告知服务器网络连接各种受限, 只能本地拉取镜像, 然后上传到服务器. 本地Windows上 ~~`docker pull gitlab/gitlab-ce:latest`~~ `docker pull gitlab/gitlab-ce:16.11.5-ce.0`
+
+:::note
+
+Pages一直在502和404之间徘徊, 报错丢给AI的解决方案越来越离谱, 提出重装之后GPT推荐了这个版本
+
+:::
+
+等待拉取完成之后, `docker images | grep gitlab` 查看镜像ID, 然后 ~~`docker save gitlab/gitlab-ce:latest -o gitlab-ce-latest.tar`~~ `docker save gitlab/gitlab-ce:16.11.5-ce.0 -o gitlab-ce-16.11.5.tar` 保存为tar文件, 通过堡垒机的SFTP上传到服务器.
+
+![alt text](image/docker_images.png)
+
+直接用 16.11.5-ce.0 起容器：
+
+```bash
+sudo docker run -d \
+  --name gitlab \
+  --restart always \
+  --hostname fem.xxx.com \
+  -p 443:443 \
+  -p 8090:80 \
+  -p 2222:22 \
+  -v /data/gitlab/config:/etc/gitlab \
+  -v /data/gitlab/logs:/var/log/gitlab \
+  -v /data/gitlab/data:/var/opt/gitlab \
+  --shm-size 256m \
+  gitlab/gitlab-ce:16.11.5-ce.0
+
+```
+
+等待
 
 ## 配置证书
 
@@ -71,11 +101,11 @@ sudo chmod 600 /data/gitlab/ssl/*.key
 
 说是因为GitLab 要求 SSL 目录权限为 700，私钥权限必须 600，否则 GitLab Nginx 不会加载.
 
-之后比较麻烦的就是要修改rb文件里面的配置, 学会了nano编辑器的退出,  `Ctrl+O, Enter, Ctrl+X` , 之前都是vim的 `Esc + :wq`
+之后比较麻烦的就是要修改rb文件里面的配置, nano编辑器有提示真不错, 退出只需要 `Ctrl+O, Enter, Ctrl+X` , 之前都是vim的 `Esc + :wq`
 
 至此GitLab在局域网内可以访问了☕
 
-![GitLab登陆成功](images/gitlab.png)
+![GitLab登陆成功](image/gitlab.png)
 
 ## 启用 GitLab Pages
 
