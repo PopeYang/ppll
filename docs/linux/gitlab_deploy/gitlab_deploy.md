@@ -48,34 +48,48 @@ docker-compose version 1.29.2, build unknown
 
 给当前用户 `$USER` 加 Docker 权限 `sudo usermod -aG docker $USER` , ssh重连, 可以避免每次都输入密码.
 
-然后被告知服务器网络连接各种受限, 只能本地拉取镜像, 然后上传到服务器. 本地Windows上 ~~`docker pull gitlab/gitlab-ce:latest`~~ `docker pull gitlab/gitlab-ce:16.11.5-ce.0`
+然后被告知服务器网络连接各种受限, 只能本地拉取镜像, 然后上传到服务器. 本地Windows上新老版本选一个下载
+- `docker pull gitlab/gitlab-ce:latest`
+- `docker pull gitlab/gitlab-ce:16.11.5-ce.0`
 
 :::note
 
-Pages一直在502和404之间徘徊, 报错丢给AI的解决方案越来越离谱, 提出重装之后GPT推荐了这个版本
+~~配置Pages的过程中一直在502和404之间徘徊, 报错丢给AI的解决方案越来越离谱, 提出重装之后GPT推荐了这个版本~~
 
 :::
 
-等待拉取完成之后, `docker images | grep gitlab` 查看镜像ID, 然后 ~~`docker save gitlab/gitlab-ce:latest -o gitlab-ce-latest.tar`~~ `docker save gitlab/gitlab-ce:16.11.5-ce.0 -o gitlab-ce-16.11.5.tar` 保存为tar文件, 通过堡垒机的SFTP上传到服务器.
+:::note
+
+16.11.5版本的runner一直授权失败, `The scheduler failed to assign job to the runner, please try again or contact system administrator`, 怀疑是和最新的runner 18.7.0不兼容, 重装回最新版本的GitLab
+
+:::
+
+等待拉取完成之后, `docker images | grep gitlab` 查看镜像ID, 
+
+然后 
+- `docker save gitlab/gitlab-ce:latest -o gitlab-ce-latest.tar` 
+- `docker save gitlab/gitlab-ce:16.11.5-ce.0 -o gitlab-ce-16.11.5.tar`
+
+保存为tar文件, 通过堡垒机的SFTP上传到服务器.
+
+`docker load -i gitlab-ce-latest.tar` 加载镜像.
 
 ![alt text](image/docker_images.png)
 
-直接用 16.11.5-ce.0 起容器：
+用回 latest 起容器：
 
 ```bash
 sudo docker run -d \
+  --hostname fem.xxx.com \
   --name gitlab \
   --restart always \
-  --hostname fem.xxx.com \
-  -p 443:443 \
   -p 8090:80 \
+  -p 443:443 \
   -p 2222:22 \
   -v /data/gitlab/config:/etc/gitlab \
   -v /data/gitlab/logs:/var/log/gitlab \
   -v /data/gitlab/data:/var/opt/gitlab \
-  --shm-size 256m \
-  gitlab/gitlab-ce:16.11.5-ce.0
-
+  gitlab/gitlab-ce:latest
 ```
 
 等待
@@ -101,91 +115,21 @@ sudo chmod 600 /data/gitlab/ssl/*.key
 
 说是因为GitLab 要求 SSL 目录权限为 700，私钥权限必须 600，否则 GitLab Nginx 不会加载.
 
-之后比较麻烦的就是要修改rb文件里面的配置, nano编辑器有提示真不错, 退出只需要 `Ctrl+O, Enter, Ctrl+X` , 之前都是vim的 `Esc + :wq`
+重装注意备份一下证书, 并且重新配置权限
+```bash
+sudo chmod 600 /data/gitlab/config/ssl/xxx.com.pem
+sudo chmod 600 /data/gitlab/config/ssl/xxx.com.key
+
+sudo chown root:root /data/gitlab/config/ssl/xxx.com.pem
+sudo chown root:root /data/gitlab/config/ssl/xxx.com.key
+```
+
+之后比较麻烦的就是要修改rb文件里面的配置, 第一次用nano编辑器, 下面有提示真不错, 退出只需要 `Ctrl+O, Enter, Ctrl+X` , 之前只用过vim的 `Esc + :wq`
+
+重装的时候使用了备份的rb文件, `sudo docker exec -it gitlab ruby -c /etc/gitlab/gitlab.rb` 检查配置文件是否正确, 然后 `sudo docker exec -it gitlab gitlab-ctl reconfigure` 重新配置
 
 至此GitLab在局域网内可以访问了☕
 
 ![GitLab登陆成功](image/gitlab.png)
 
-## 启用 GitLab Pages
 
-GitLab Pages 需要额外配置。首先，确保在 `gitlab.rb` 文件中启用了 Pages 服务：
-
-```ruby
-# GitLab Pages
-
-# 1. 设置 Pages 的外部域名 (即使在内部不配置 SSL，这里也要写 https，为了生成的链接正确)
-pages_external_url "https://pages.xxx.com.cn"
-
-# 2. 启用 Pages 核心服务
-gitlab_pages['enable'] = true
-
-# 3. 【关键】禁用 Pages 自带的 Nginx (避免冲突)
-pages_nginx['enable'] = false
-
-# 4. 【关键】让 Pages 服务直接监听所有网卡的 8090 端口
-# 这样你才能从宿主机通过 docker 端口映射访问到它
-gitlab_pages['listen_proxy'] = "0.0.0.0:8090"
-
-# 5. 告诉 Pages 不要自己在内部搞 SSL (因为外部 Nginx 会处理)
-gitlab_pages['inplace_chroot'] = true
-```
-
-## 配置 GitLab Runner
-
-GitLab的CI/CD依赖runner来执行任务, 计划在一台Windows机器上部署runner, 我的Pages使用Docusaurus, 准备对应的node环境.
-
-在Windows上使用PowerShell安装环境:
-
-```powershell
-winget install OpenJS.NodeJS.LTS
-```
-
-通过`node -v` 和 `npm -v` 查看版本确认安装成功.
-
-```bash
-C:\Users\ppll>node -v
-v24.11.1
-
-C:\Users\>npm -v
-11.6.2
-```
-
-然后开始安装GitLab Runner, PowerShell 管理员权限执行:
-
-```powershell
-Invoke-WebRequest -Uri https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-windows-amd64.exe -OutFile gitlab-runner.exe
-```
-
-安装
-
-```powershell
-.\gitlab-runner.exe install
-```
-
-启动
-
-```powershell
-.\gitlab-runner.exe start
-```
-
-查看状态
-
-```powershell
-PS C:\Windows\system32> Invoke-WebRequest -Uri https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-windows-amd64.exe -OutFile gitlab-runner.exe
-PS C:\Windows\system32> .\gitlab-runner.exe install
-Runtime platform                                    arch=amd64 os=windows pid=43444 revision=df85dadf version=18.6.6
-PS C:\Windows\system32> .\gitlab-runner.exe start
-Runtime platform                                    arch=amd64 os=windows pid=33268 revision=df85dadf version=18.6.6
-PS C:\Windows\system32> Get-Service gitlab-runner
-
-Status   Name               DisplayName
-------   ----               -----------
-Running  gitlab-runner      gitlab-runner
-```
-
-然后进入GitLab的网页端, 新建Group, 新建Project, 进入项目右上角的
-
-> Project Settings -> CI/CD -> Runners -> Create project runner
-
-复制注册命令, 在PowerShell中执行注册命令, 命名, 操作选择Shell, 完成注册.
