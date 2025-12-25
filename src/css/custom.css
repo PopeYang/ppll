@@ -1,30 +1,136 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Claude Style Theme for Docusaurus
+ * 核心特征：暖陶土色 + 纸质感背景 + 衬线体
  */
 
-/* You can override the default Infima variables here. */
+/* =========================================
+   1. 基础变量
+   ========================================= */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  /* --- 字体 --- */
+  --ifm-font-family-base: "Söhne", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ifm-heading-font-family: "Tiempos Headline", "Georgia", "Times New Roman", serif;
+
+  /* --- 配色 --- */
+  /* 主色调：陶土橙 */
+  --ifm-color-primary: #D97757;
+  --ifm-color-primary-dark: #C06245;
+  --ifm-color-primary-darker: #B5583E;
+  --ifm-color-primary-darkest: #974733;
+  --ifm-color-primary-light: #E28D6F;
+  --ifm-color-primary-lighter: #E59B7D;
+  --ifm-color-primary-lightest: #EFC7BC;
+
+  /* 背景：暖纸色 + 白色表面 */
+  --ifm-background-color: #FAF9F5;
+  --ifm-background-surface-color: #FFFFFF;
+
+  /* 文字：深炭灰 */
+  --ifm-font-color-base: #2E2A27;
+  --ifm-heading-color: #1A1918;
+
+  /* --- UI 细节 --- */
+  --ifm-code-font-size: 90%;
+  --ifm-border-radius-base: 8px;
+  --docusaurus-highlighted-code-line-bg: rgba(217, 119, 87, 0.1);
+  --ifm-navbar-shadow: none;
+  --ifm-toc-border-color: rgba(0, 0, 0, 0.1);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
 [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  /* --- 深色模式 --- */
+  /* 主色调：柔和杏粉 */
+  --ifm-color-primary: #EFA581;
+  --ifm-color-primary-dark: #E9946D;
+  --ifm-color-primary-darker: #E0845D;
+  --ifm-color-primary-darkest: #CC6A45;
+  --ifm-color-primary-light: #F2B89B;
+  --ifm-color-primary-lighter: #F5C6AC;
+  --ifm-color-primary-lightest: #FBE3D9;
+
+  /* 背景：暖黑 */
+  --ifm-background-color: #1A1918;
+  --ifm-background-surface-color: #252423;
+
+  /* 文字：米灰 */
+  --ifm-font-color-base: #E3E0DD;
+  --ifm-heading-color: #F0EDEA;
+
+  /* UI 细节 */
+  --docusaurus-highlighted-code-line-bg: rgba(239, 165, 129, 0.1);
+  --ifm-toc-border-color: rgba(255, 255, 255, 0.05);
+}
+
+/* =========================================
+   2. 排版
+   ========================================= */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--ifm-heading-font-family);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.75em;
+}
+
+h1 {
+  font-weight: 400;
+  font-size: 2.5rem;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================
+   3. 导航栏与布局
+   ========================================= */
+.navbar {
+  background-color: var(--ifm-background-color);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='dark'] .navbar {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* 侧边栏选中态 */
+.menu__link--active {
+  background-color: rgba(217, 119, 87, 0.1);
+  color: var(--ifm-color-primary-darker);
+  font-weight: 600;
+}
+
+[data-theme='dark'] .menu__link--active {
+  background-color: rgba(239, 165, 129, 0.1);
+  color: var(--ifm-color-primary-light);
+}
+
+/* =========================================
+   4. 组件细节
+   ========================================= */
+/* 提示框 */
+.alert {
+  border: none;
+  background-color: rgba(217, 119, 87, 0.08);
+  color: var(--ifm-font-color-base);
+  border-left: 4px solid var(--ifm-color-primary);
+}
+
+/* 代码块 */
+.theme-code-block {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+/* 图片 */
+article img {
+  border-radius: 6px;
 }
