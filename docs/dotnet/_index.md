@@ -1,7 +1,7 @@
 ---
-title: Linux
+title: .NET
 weight: 20
-description: Guides and notes for Linux systems: Arch, shell, and dev environments.
+description: .NET有关的文档
 ---
 
-Linux topics and workflows.
+.NET topics and workflows.
