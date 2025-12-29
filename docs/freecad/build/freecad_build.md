@@ -36,14 +36,14 @@ git checkout  tags/1.0.2
 
 解压到 D:\Gitee\LibPack-1.0.0-v3.0.0-Release
 
-### 子模块submodule
+## 子模块 submodule
 
 ```bash
 cd D:\Gitee\FreeCAD
 git submodule update --init --recursive
 ```
 
-### 编译输出目录
+## 编译输出目录
 
 采用 out-of-source build
 
@@ -59,7 +59,7 @@ D:\Gitee\
 mkdir D:\Gitee\FreeCAD-build
 ```
 
-### CMake 配置
+## CMake 配置
 
 使用GUI操作,打开 CMake, 设置
 
@@ -86,4 +86,25 @@ Now run 'cmake --build D:/Gitee/FreeCAD-build' to build FreeCAD
 ```
 
 直接Generate, `Generating done (12.2s)`, 完成cmake配置.
+
+## Visual Studio 编译
+
+进入 FreeCAD-build 文件夹, 打开 FreeCAD.sln, 选择 RelWithDebInfo, 开始编译.
+
+========== Build: 143 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+========== Build completed at 02:38 PM and took 26:51.720 minutes ==========
+
+编译完成后, 设置 FreeCADMain为启动项, F5
+
+找不到ft5.dll, Qt6Widgets.dll, Qt6Gui.dll, Qt6Core.dll
+
+![alt text](images/dll_not_found.png)
+
+Visual Studio 不会自动将 LibPack 里的 DLL 复制到生成的 bin 目录中, 返回CMake, 勾选:
+
+- [x] FREECAD COPY DEPEND DIRS TO BUILD
+- [x] FREECAD COPY LIBPACK BIN TO BUILD
+- [x] FREECAD COPY PLUGINS BIN TO BUILD
+  
+然后重新Configure, Generate, 编译, 这三个选项是 FreeCAD CMake 脚本中专门为 LibPack 的用户设计的自动搬运工具
 
