@@ -131,3 +131,25 @@ QT_PLUGIN_PATH=D:\Gitee\FreeCAD-build\bin
 编译后报错 `During initialization the error "No module named 'freecad"" occurred`
 
 ![alt text](images/initialization_error.png)
+
+## 问题分析
+
+目前遇到的所有报错（DLL找不到、Qt插件报错、Python模块缺失），都是因为 Visual Studio 的多配置构建目录结构与 FreeCAD CMake 预期的运行时目录结构不匹配.
+
+## 解决方案
+
+执行 CMake 的 INSTALL , 将所有散落在不同文件夹的 EXE、DLL、Mod、Python 脚本合并到一个标准的 FreeCAD 目录结构中.
+
+CMake GUI 中找到变量 CMAKE_INSTALL_PREFIX, 修改为 `D:/Gitee/FreeCAD-Install`.
+
+Configure, Generate.
+
+然后在 VS 中，右键 FreeCADMain → Properties → Debugging, 设置 Command 为安装目录下的 EXE 路径：`D:\Gitee\FreeCAD-Install\bin\FreeCAD.exe`.
+
+Working Directory 保持为 $(ProjectDir) 即可, 同时清空之前配置的Environment Variables。
+
+![alt text](images/freecadmain_property_pages.png)
+
+此时F5, VS 会编译代码，然后启动安装目录下的 EXE，同时挂载调试器, 成功启动 FreeCAD.
+
+![alt text](images/success.png)
