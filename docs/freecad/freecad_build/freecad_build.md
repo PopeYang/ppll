@@ -1,7 +1,7 @@
 ---
-title: FreeCAD 构建
-weight: 20
-description: FreeCAD 构建步骤记录
+title: FreeCAD 编译踩坑记
+weight: 40
+description: FreeCAD 编译踩坑记录
 ---
 
 ## 1. 构建环境准备
