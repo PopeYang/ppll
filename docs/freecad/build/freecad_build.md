@@ -4,152 +4,88 @@ weight: 20
 description: FreeCAD 构建步骤记录
 ---
 
-## 构建环境
+## 1. 构建环境准备
 
-在Windows上编译FreeCAD, 安装:
-- Visual Studio 2022 Community
-  - 勾选：
-    - [x] Desktop development with C++
-    - [x] C++ CMake tools for Windows
-- CMake（勾选“Add to PATH”省事）
-  - 选择3.31.10 (3.x即可)
-  - 4.0 之后的版本太新了会报错
-    ```
-    CMake Error at .../Coin-4.0.2/coin-config.cmake:1 (cmake_minimum_required):
-    Compatibility with CMake < 3.5 has been removed from CMake.
-    ```
-- 7-Zip
+在 Windows 上编译 FreeCAD，安装并配置：
+- **Visual Studio 2022 Community**
+  - 勾选：`Desktop development with C++`、`C++ CMake tools for Windows`
+- **CMake (3.31.10)**
+  - 注意：4.0+ 版本会导致 `Coin-4.0.2` 报错（提示 CMake < 3.5 兼容性已移除）。
+- **7-Zip**
 
-## 下载源码
+## 2. 源码与依赖获取
 
-基于 release 1.0.2 版本进行二次开发
-
+### 2.1 下载源码
+基于 release 1.0.2 版本：
 ```bash
 cd D:\Gitee
 git clone https://github.com/FreeCAD/FreeCAD.git
-git checkout  tags/1.0.2
+git checkout tags/1.0.2
 ```
 
-## 下载并解压 LibPack
-
-对应编译的1.0.2版本, 到 FreeCAD-LibPack 的 Releases 下载 LibPack-1.0.0 Version 3.0.0
-
-解压到 D:\Gitee\LibPack-1.0.0-v3.0.0-Release
-
-## 子模块 submodule
-
+### 2.2 更新子模块 (Submodule)
 ```bash
 cd D:\Gitee\FreeCAD
 git submodule update --init --recursive
 ```
 
-## 编译输出目录
+### 2.3 准备 LibPack
+- 下载地址：FreeCAD-LibPack Releases -> `LibPack-1.0.0 Version 3.0.0`
+- 解压路径：`D:\Gitee\LibPack-1.0.0-v3.0.0-Release`
 
-采用 out-of-source build
+## 3. CMake 构建配置
 
-文件结构：
-```bash
+### 3.1 目录结构
+采用 out-of-source build，手动创建 `FreeCAD-build` 文件夹：
+```text
 D:\Gitee\
 ├─ FreeCAD\
 ├─ FreeCAD-build\
-├─ LibPack-1.0.0-v3.0.0-Release\
-```
-新建文件夹 FreeCAD-build
-```bash
-mkdir D:\Gitee\FreeCAD-build
+└─ LibPack-1.0.0-v3.0.0-Release\
 ```
 
-## CMake 配置
+### 3.2 CMake GUI 设置
+- **Source**: `D:/Gitee/FreeCAD`
+- **Build**: `D:/Gitee/FreeCAD-build`
+- **Generator**: `Visual Studio 17 2022`, `x64`
+- **LibPack 路径**: 设置 `FREECAD_LIBPACK_DIR` 指向解压目录。
+- **依赖搬运配置**:
+  勾选以下项以自动复制 DLL：
+  - [x] `FREECAD_COPY_DEPEND_DIRS_TO_BUILD`
+  - [x] `FREECAD_COPY_LIBPACK_BIN_TO_BUILD`
+  - [x] `FREECAD_COPY_PLUGINS_BIN_TO_BUILD`
 
-使用GUI操作,打开 CMake, 设置
+![CMake 配置](images/cmake_build.png)
 
-- Where is the source code: → D:/Gitee/FreeCAD
-- Where to build the binaries: → D:/Gitee/FreeCAD-build
+## 4. Visual Studio 编译与初期问题
 
-点击 Configure, 选择
-- Generator: → Visual Studio 17 2022
-- Platform: → x64
+### 4.1 编译流程
+- 打开 `FreeCAD.sln`，选择 `RelWithDebInfo` 配置进行编译。
 
-Configure, 报错之后，找到并设置 LibPack 路径
-- FREECAD_LIBPACK_DIR → D:/Gitee/LibPack-1.0.0-v3.0.0-Release
+### 4.2 运行报错记录 (F5)
+- **DLL 缺失**: 找不到 `ft5.dll`, `Qt6Widgets.dll` 等。
+- **原因**: CMake 搬运的 DLL 位于 `bin/`，而 VS 生成的 EXE 位于 `bin/RelWithDebInfo/`，二者层级不一致。
+- **临时尝试**: 在环境变量中添加 `PATH` 和 `QT_PLUGIN_PATH` 指向 `bin/`，但仍报 `No module named 'freecad'` 错误。
 
-然后重新 Configure
+![DLL 报错](images/dll_not_found.png)
+![Qt 插件报错](images/qt_plugin_error.png)
+![初始化报错](images/initialization_error.png)
 
-![alt text](images/cmake_build.png)
+## 5. 终态解决方案：INSTALL 部署调试
 
-提示
+### 5.1 执行安装 (Install)
+通过 CMake 的 INSTALL 功能将分散的组件合并：
+- `CMAKE_INSTALL_PREFIX` 设置为 `D:/Gitee/FreeCAD-Install`。
+- 在 VS 中运行 `INSTALL` 项目。
 
-```
-=================================================
-Now run 'cmake --build D:/Gitee/FreeCAD-build' to build FreeCAD
-=================================================
-```
+### 5.2 调试环境配置
+修改 `FreeCADMain` 项目属性：
+- **Command**: `D:\Gitee\FreeCAD-Install\bin\FreeCAD.exe` (指向安装目录)
+- **Working Directory**: `$(ProjectDir)`
+- **Environment**: 清空之前的手动 PATH 配置。
 
-直接Generate, `Generating done (12.2s)`, 完成cmake配置.
+![属性页设置](images/freecadmain_property_pages.png)
 
-## Visual Studio 编译
+**记录**: 采用该方案后，F5 可正常启动并挂载调试器。
 
-进入 FreeCAD-build 文件夹, 打开 FreeCAD.sln, 选择 RelWithDebInfo, 开始编译.
-
-========== Build: 143 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
-========== Build completed at 02:38 PM and took 26:51.720 minutes ==========
-
-编译完成后, 设置 FreeCADMain为启动项, F5
-
-找不到ft5.dll, Qt6Widgets.dll, Qt6Gui.dll, Qt6Core.dll
-
-![alt text](images/dll_not_found.png)
-
-Visual Studio 不会自动将 LibPack 里的 DLL 复制到生成的 bin 目录中, 返回CMake, 勾选:
-
-- [x] FREECAD COPY DEPEND DIRS TO BUILD
-- [x] FREECAD COPY LIBPACK BIN TO BUILD
-- [x] FREECAD COPY PLUGINS BIN TO BUILD
-  
-然后重新Configure, Generate, 编译, 这三个选项是 FreeCAD CMake 脚本中专门为 LibPack 的用户设计的自动搬运工具, 会自动将 LibPack 里的 DLL 复制到生成的 bin 目录中.
-
-修改之后, 再次编译, 此时编译生成的目录为 `D:\Gitee\FreeCAD-build\bin\RelWithDebInfo`, 但是上述三个脚本搬运的 DLL 文件位于 `D:\Gitee\FreeCAD-build\bin` 目录下, 配置中添加:
-
-```
-Environment Variables: 
-PATH=D:\Gitee\FreeCAD-build\bin;%PATH%
-```
-
-QT_PLUGIN_PATH=D:\Gitee\FreeCAD-build\bin
-
-
-![alt text](images/qt_plugin_error.png)
-
-Qt 在 EXE 同级目录下的 platforms 文件夹里找插件，此时 EXE 位于 `D:\Gitee\FreeCAD-build\bin\RelWithDebInfo`, 而platforms文件夹位于 `D:\Gitee\FreeCAD-build\bin`, 找不到 qwindows.dll 等qt插件, 配置更新为:
-
-```
-Environment Variables: 
-PATH=D:\Gitee\FreeCAD-build\bin;%PATH%
-QT_PLUGIN_PATH=D:\Gitee\FreeCAD-build\bin
-```
-
-编译后报错 `During initialization the error "No module named 'freecad"" occurred`
-
-![alt text](images/initialization_error.png)
-
-## 问题分析
-
-目前遇到的所有报错（DLL找不到、Qt插件报错、Python模块缺失），都是因为 Visual Studio 的多配置构建目录结构与 FreeCAD CMake 预期的运行时目录结构不匹配.
-
-## 解决方案
-
-执行 CMake 的 INSTALL , 将所有散落在不同文件夹的 EXE、DLL、Mod、Python 脚本合并到一个标准的 FreeCAD 目录结构中.
-
-CMake GUI 中找到变量 CMAKE_INSTALL_PREFIX, 修改为 `D:/Gitee/FreeCAD-Install`.
-
-Configure, Generate.
-
-然后在 VS 中，右键 FreeCADMain → Properties → Debugging, 设置 Command 为安装目录下的 EXE 路径：`D:\Gitee\FreeCAD-Install\bin\FreeCAD.exe`.
-
-Working Directory 保持为 $(ProjectDir) 即可, 同时清空之前配置的Environment Variables。
-
-![alt text](images/freecadmain_property_pages.png)
-
-此时F5, VS 会编译代码，然后启动安装目录下的 EXE，同时挂载调试器, 成功启动 FreeCAD.
-
-![alt text](images/success.png)
+![成功启动](images/success.png)
