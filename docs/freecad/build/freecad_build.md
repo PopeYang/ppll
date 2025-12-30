@@ -106,5 +106,28 @@ Visual Studio 不会自动将 LibPack 里的 DLL 复制到生成的 bin 目录�
 - [x] FREECAD COPY LIBPACK BIN TO BUILD
 - [x] FREECAD COPY PLUGINS BIN TO BUILD
   
-然后重新Configure, Generate, 编译, 这三个选项是 FreeCAD CMake 脚本中专门为 LibPack 的用户设计的自动搬运工具
+然后重新Configure, Generate, 编译, 这三个选项是 FreeCAD CMake 脚本中专门为 LibPack 的用户设计的自动搬运工具, 会自动将 LibPack 里的 DLL 复制到生成的 bin 目录中.
 
+修改之后, 再次编译, 此时编译生成的目录为 `D:\Gitee\FreeCAD-build\bin\RelWithDebInfo`, 但是上述三个脚本搬运的 DLL 文件位于 `D:\Gitee\FreeCAD-build\bin` 目录下, 配置中添加:
+
+```
+Environment Variables: 
+PATH=D:\Gitee\FreeCAD-build\bin;%PATH%
+```
+
+QT_PLUGIN_PATH=D:\Gitee\FreeCAD-build\bin
+
+
+![alt text](images/qt_plugin_error.png)
+
+Qt 在 EXE 同级目录下的 platforms 文件夹里找插件，此时 EXE 位于 `D:\Gitee\FreeCAD-build\bin\RelWithDebInfo`, 而platforms文件夹位于 `D:\Gitee\FreeCAD-build\bin`, 找不到 qwindows.dll 等qt插件, 配置更新为:
+
+```
+Environment Variables: 
+PATH=D:\Gitee\FreeCAD-build\bin;%PATH%
+QT_PLUGIN_PATH=D:\Gitee\FreeCAD-build\bin
+```
+
+编译后报错 `During initialization the error "No module named 'freecad"" occurred`
+
+![alt text](images/initialization_error.png)
