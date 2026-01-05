@@ -57,7 +57,7 @@ D:\Gitee\
 
 ![CMake 配置](images/cmake_build.png)
 
-## 4. Visual Studio 编译与初期问题
+## 4. Visual Studio 编译踩坑
 
 ### 4.1 编译流程
 - 打开 `FreeCAD.sln`，选择 `RelWithDebInfo` 配置进行编译。
@@ -71,7 +71,7 @@ D:\Gitee\
 ![Qt 插件报错](images/qt_plugin_error.png)
 ![初始化报错](images/initialization_error.png)
 
-## 5. 终态解决方案：INSTALL 部署调试
+## 5. 脱坑方案：INSTALL 部署调试
 
 ### 5.1 执行安装 (Install)
 通过 CMake 的 INSTALL 功能将分散的组件合并：
