@@ -1,8 +1,8 @@
 {
-    "label": "🅕 FreeCAD",
+    "label": "🅕 FEM",
     "position": 4,
     "link": {
         "type": "generated-index",
-        "description": "FreeCAD有关的文档"
+        "description": "有限元(FEM)相关文档"
     }
 }
