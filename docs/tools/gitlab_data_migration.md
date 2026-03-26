@@ -75,4 +75,49 @@ Claude和GPT互相完善给出的参数, 看着就很完善
 
 等进度条走完
 
+### 修改配置文件
+
+查看配置文件`cat /etc/docker/daemon.json` 
+
+结果发现
+`cat: /etc/docker/daemon.json: No such file or directory`
+
+新建配置文件, 配置数据存储的路径
+```
+fem@fem:~$ sudo tee /etc/docker/daemon.json <<'EOF'
+{
+  "data-root": "/data/docker"
+}
+EOF
+{
+  "data-root": "/data/docker"
+}
+```
+
+### 验证状态
+
+启动 docker `sudo systemctl start docker`, 然后搜索 `sudo docker info | grep "Docker Root Dir"`
+
+输出`Docker Root Dir: /data/docker`, 说明配置文件读到了
+
+最后验证一下 `docker ps -a`
+
+看到包含`Up 2 minutes (healthy)` 字段, 网页访问也没问题, 说明迁移好了
+
+### 释放空间
+
+舒服了
+
+```
+fem@fem:~$ sudo rm -rf /var/lib/docker
+fem@fem:~$ df -h
+Filesystem             Size  Used Avail Use% Mounted on
+tmpfs                  1.6G  1.4M  1.6G   1% /run
+/dev/sda2               98G   12G   82G  12% /
+tmpfs                  7.9G     0  7.9G   0% /dev/shm
+tmpfs                  5.0M     0  5.0M   0% /run/lock
+/dev/mapper/vg0-lv--0  492G   87G  380G  19% /data
+tmpfs                  1.6G   12K  1.6G   1% /run/user/1000
+```
+
 
