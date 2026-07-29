@@ -1,36 +1,26 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-// 博客 collection —— 纯时间线，无标签/作者/归档聚合页
-const blog = defineCollection({
-  loader: glob({ pattern: ['*.md', '*.mdx'], base: './src/content/blog' }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      description: z.string().optional(),
-      pubDate: z.coerce.date(), // 接受 "2025-11-06" 或完整 ISO
-      updatedDate: z.coerce.date().optional(),
-      heroImage: image().optional(),
-      // 兼容 Docusaurus 旧字段
-      authors: z.array(z.string()).default([]),
-      tags: z.array(z.string()).default([]),
-      // 旧 slug（/intro）仅作参考；Astro 路由由 lib/routes.ts 统一管理
-      slug: z.string().optional(),
-    }),
-});
-
-// 文档 collection —— 按目录分类，侧边栏展示
+// 文档 collection —— 站点唯一的原创内容。
+// 拍平，无目录分类；用 tags 区分类型（教程/随笔/旅行 等）。
+// 排序按 date（首次创作日期）。
 const docs = defineCollection({
   loader: glob({
     pattern: ['**/*.md', '**/*.mdx'],
     base: './src/content/docs',
-    // _category_.json 已合并进 _index.md，忽略之
   }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    position: z.number().optional(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string().optional(),
+      date: z.coerce.date(),
+      updatedDate: z.coerce.date().optional(),
+      tags: z.array(z.string()).default([]),
+      // 可选封面图（旅游/摄影类文档）
+      cover: image().optional(),
+      // 无封面图时卡片上显示的锚点 emoji
+      emoji: z.string().optional(),
+    }),
 });
 
-export const collections = { blog, docs };
+export const collections = { docs };

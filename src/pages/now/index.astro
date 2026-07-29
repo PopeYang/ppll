@@ -1,0 +1,225 @@
+---
+import Base from '../../layouts/Base.astro';
+import { fetchMastodon } from '../../lib/mastodon';
+
+const profile = await fetchMastodon();
+
+function fmtDate(d: Date): string {
+  const now = new Date();
+  const diffMs = now.getTime() - d.getTime();
+  const diffMin = Math.floor(diffMs / 60000);
+  const diffHr = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHr / 24);
+
+  if (diffMin < 1) return '刚刚';
+  if (diffMin < 60) return `${diffMin} 分钟前`;
+  if (diffHr < 24) return `${diffHr} 小时前`;
+  if (diffDay < 7) return `${diffDay} 天前`;
+  return d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+---
+
+<Base title="动态" description="ppy 的 Mastodon 动态">
+  <section class="now-page">
+    <header class="page-header">
+      <h1>动态</h1>
+      <p class="subtitle">
+        来自 <a href={profile.link} target="_blank" rel="noopener noreferrer">@ppy@mas.to</a>
+        的碎碎念。
+      </p>
+    </header>
+
+    {profile.toots.length === 0 ? (
+      <div class="empty">
+        <p>暂时拉不到动态，可能是构建环境网络受限。</p>
+        <a href={profile.link} target="_blank" rel="noopener noreferrer" class="btn">
+          去 Mastodon 看 →
+        </a>
+      </div>
+    ) : (
+      <ul class="toot-list">
+        {profile.toots.map((toot) => (
+          <li class="toot">
+            <a href={toot.url} target="_blank" rel="noopener noreferrer" class="toot-link">
+              <div class="toot-body">
+                {profile.avatar && (
+                  <img src={profile.avatar} alt="ppy" class="toot-avatar" width="40" height="40" />
+                )}
+                <div class="toot-content">
+                  <div class="toot-meta">
+                    <span class="toot-name">ppy</span>
+                    <time datetime={toot.pubDate.toISOString()}>{fmtDate(toot.pubDate)}</time>
+                  </div>
+                  <div class="toot-text" set:html={toot.contentHtml} />
+                  {toot.media && toot.media.length > 0 && (
+                    <div class="toot-media">
+                      {toot.media.map((src) => (
+                        <img src={src} alt="嘟文图片" loading="lazy" />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <footer class="now-footer">
+      <a href={profile.link} target="_blank" rel="noopener noreferrer" class="btn">
+        在 Mastodon 关注我 →
+      </a>
+    </footer>
+  </section>
+</Base>
+
+<style>
+  .now-page {
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    margin-bottom: 0.3rem;
+  }
+
+  .subtitle {
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--color-muted);
+  }
+
+  .empty p {
+    margin-bottom: 1.2rem;
+  }
+
+  .toot-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toot {
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+  }
+
+  .toot:hover {
+    border-color: var(--color-primary);
+  }
+
+  .toot-link {
+    display: block;
+    padding: 1.1rem 1.2rem;
+    color: inherit;
+  }
+
+  .toot-link:hover {
+    text-decoration: none;
+  }
+
+  .toot-body {
+    display: flex;
+    gap: 0.8rem;
+  }
+
+  .toot-avatar {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  .toot-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .toot-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .toot-name {
+    font-weight: 600;
+    color: var(--color-heading);
+  }
+
+  .toot-meta time {
+    color: var(--color-muted);
+    font-size: 0.82rem;
+  }
+
+  .toot-text {
+    color: var(--color-text);
+    line-height: 1.65;
+    font-size: 0.97rem;
+    word-break: break-word;
+  }
+
+  .toot-text :global(p) {
+    margin: 0;
+  }
+
+  .toot-text :global(a) {
+    color: var(--color-primary-dark);
+  }
+
+  :root[data-theme='dark'] .toot-text :global(a) {
+    color: var(--color-primary);
+  }
+
+  .toot-media {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.7rem;
+  }
+
+  .toot-media img {
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .now-footer {
+    margin-top: 2.5rem;
+    text-align: center;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.6rem 1.4rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.95rem;
+    transition: border-color 0.15s ease, transform 0.12s ease;
+  }
+
+  .btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-dark);
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+</style>

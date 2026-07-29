@@ -1,7 +1,9 @@
 ---
 title: Arch Linux
-position: 10
+date: 2025-12-02
 description: Arch Linux 安装与图形环境配置
+tags: [Linux]
+emoji: 🐧
 ---
 
 ## 网络连接

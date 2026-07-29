@@ -1,7 +1,9 @@
 ---
 title: 内网离线 GitLab + Runner + Pages 填坑记
-position: 30
+date: 2025-12-10
 description: 在 Ubuntu 24.04 上使用 Docker 离线部署 GitLab CE、Runner 及 Docusaurus Pages 的完整步骤与排错记录
+tags: [Linux, GitLab, Docker]
+emoji: 🦊
 ---
 
 ## 系统环境

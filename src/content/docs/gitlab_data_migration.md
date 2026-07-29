@@ -1,7 +1,9 @@
 ---
 title: 迁移 GitLab 数据
-position: 20
+date: 2026-03-26
 description: 迁移 Docker 存储目录的记录
+tags: [GitLab, Docker]
+emoji: 📦
 ---
 
 ## 前言

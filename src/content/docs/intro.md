@@ -1,7 +1,9 @@
 ---
-title: 📚 破破文档
-position: 1
+title: 破破文档
+date: 2025-11-06
 description: 欢迎来到 ppy 的个人文档库
+tags: [其他]
+emoji: 📚
 ---
 
 你好👋，我是 **ppy**。

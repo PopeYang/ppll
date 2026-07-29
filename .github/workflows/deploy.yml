@@ -5,8 +5,13 @@ on:
     branches:
       - main
   pull_request:
+  # 每天定时重建一次，刷新 Mastodon 动态页（UTC 04:00 ≈ 北京时间 12:00）
+  schedule:
+    - cron: '0 4 * * *'
+  # 允许在 Actions 页面手动触发（发完重要嘟文想立刻刷新时用）
+  workflow_dispatch:
 
-# 限制 push:main 只触发一次（PR 同时存在时避免重复）
+# 限制只触发一次（push/PR/cron 同时存在时避免重复）
 concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
@@ -40,16 +45,17 @@ jobs:
         run: npm run build
 
       - name: Upload Build Artifact
-        # PR 只验证构建，不上传、不部署
-        if: github.event_name == 'push'
+        # PR 只验证构建，不上传、不部署；
+        # push 到 main 与定时任务都需要上传
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
   deploy:
     name: Deploy to GitHub Pages
-    # 仅 push 到 main 才部署
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # 仅 push 到 main 或定时任务才部署（PR 不部署）
+    if: github.event_name != 'pull_request'
     needs: build
 
     permissions:

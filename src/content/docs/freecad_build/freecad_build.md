@@ -1,7 +1,9 @@
 ---
 title: FreeCAD 编译踩坑小记
-position: 40
+date: 2026-03-20
 description: FreeCAD 编译踩坑记录
+tags: [FEM, FreeCAD, C++]
+emoji: 🔧
 ---
 
 ## 1. 构建环境准备

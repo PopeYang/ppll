@@ -1,7 +1,9 @@
 ---
 title: Windows 7 安装 .NET 4.8
-position: 30
+date: 2025-12-02
 description: 在 Windows 7 系统上安装 .NET Framework 4.8 步骤记录
+tags: [.NET, Windows]
+emoji: 🪟
 ---
 
 ## Windows 7 系统安装

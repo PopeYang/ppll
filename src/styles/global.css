@@ -267,3 +267,91 @@ ol {
   margin: 0 auto;
   padding: 0 1.2rem;
 }
+
+/* =========================================
+   正文 prose 排版（文章 / 文档共用）
+   ========================================= */
+.prose {
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: var(--color-text);
+}
+
+.prose > *:first-child {
+  margin-top: 0;
+}
+
+.prose p {
+  margin: 0 0 1.2em;
+}
+
+.prose h2 {
+  margin-top: 2.2em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.prose h3 {
+  margin-top: 1.8em;
+}
+
+.prose ul,
+.prose ol {
+  margin: 0 0 1.2em;
+  padding-left: 1.6em;
+}
+
+.prose li {
+  margin: 0.3em 0;
+}
+
+.prose li > ul,
+.prose li > ol {
+  margin: 0.3em 0;
+}
+
+.prose img {
+  display: block;
+  margin: 1.5em auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.prose pre {
+  margin: 1.3em 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.prose :not(pre) > code {
+  word-break: break-word;
+}
+
+.prose blockquote {
+  font-style: italic;
+}
+
+.prose table {
+  font-size: 0.95rem;
+}
+
+.prose a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(217, 119, 87, 0.3);
+  text-decoration-thickness: 1px;
+}
+
+:root[data-theme='dark'] .prose a {
+  text-decoration-color: rgba(239, 165, 129, 0.3);
+}
+
+.prose a:hover {
+  text-decoration-color: currentColor;
+}
+
+.prose hr {
+  margin: 3em 0;
+}
+

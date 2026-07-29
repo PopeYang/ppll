@@ -1,7 +1,9 @@
 ---
 title: Conda 迁移到 uv
-position: 10
+date: 2026-03-20
 description: 记录将 Python 开发环境从 Conda 迁移到 uv 的过程和经验
+tags: [Python, 工具]
+emoji: 🐍
 ---
 
 这篇文档记录了将 Python 虚拟环境和包管理从 Conda 迁移到 [uv](https://github.com/astral-sh/uv) 的过程。

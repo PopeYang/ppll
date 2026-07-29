@@ -1,104 +1,261 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
-import { buildSidebar } from '../../lib/sidebar';
+import { Image } from 'astro:assets';
+import { toDocList, collectTags, tagToSlug } from '../../lib/tags';
 
 const entries = await getCollection('docs');
-const { rootItems, categories } = buildSidebar(entries);
+const posts = toDocList(entries);
+const tags = collectTags(entries);
+
+function fmtDate(d: Date): string {
+  return d.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+}
 ---
 
-<Base title="破破文档" description="ppy 的技术文档库">
-  <section class="docs-index">
-    <h1>📚 破破文档</h1>
-    <p class="subtitle">技术探索的笔记与踩坑实录。</p>
+<Base title="破破文档" description="ppy 的技术文档与笔记，按时间排列">
+  <header class="page-header">
+    <h1>破破文档</h1>
+    <p class="subtitle">技术探索的笔记与踩坑实录，共 {posts.length} 篇。</p>
+  </header>
 
-    {rootItems.length > 0 && (
-      <div class="root-items">
-        {rootItems.map((item) => (
-          <a href={item.url} class="card card-root">
-            <span class="card-title">{item.title}</span>
-            {item.description && <span class="card-desc">{item.description}</span>}
+  <div class="docs-layout">
+    <main class="docs-main">
+      <div class="card-grid">
+        {posts.map((post) => (
+          <a href={post.url} class="card">
+            <div class="card-cover">
+              {post.cover ? (
+                <Image src={post.cover} alt={post.title} width={480} height={270} />
+              ) : (
+                <div class="card-cover-fallback">
+                  <span class="cover-emoji">{post.emoji ?? '📄'}</span>
+                </div>
+              )}
+            </div>
+            <div class="card-body">
+              <h2 class="card-title">{post.title}</h2>
+              {post.description && <p class="card-desc">{post.description}</p>}
+              <div class="card-meta">
+                <time datetime={post.date.toISOString()}>{fmtDate(post.date)}</time>
+              </div>
+            </div>
           </a>
         ))}
       </div>
-    )}
+    </main>
 
-    <div class="category-grid">
-      {categories.map((cat) => (
-        <a href={cat.url} class="card card-category">
-          <span class="card-title">{cat.title}</span>
-          {cat.description && <span class="card-desc">{cat.description}</span>}
-          <span class="card-count">{cat.items.length} 篇</span>
-        </a>
-      ))}
-    </div>
-  </section>
+    <aside class="docs-sidebar" aria-label="标签">
+      <div class="sidebar-block">
+        <h3 class="sidebar-title">标签</h3>
+        <nav class="tag-list">
+          {tags.map(({ tag, count }) => (
+            <a href={`/docs/tag/${tagToSlug(tag)}/`} class="sidebar-tag">
+              <span>#{tag}</span>
+              <span class="sidebar-tag-count">{count}</span>
+            </a>
+          ))}
+        </nav>
+      </div>
+    </aside>
+  </div>
 </Base>
 
 <style>
-  .docs-index {
-    max-width: 900px;
-    margin: 0 auto;
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    margin-bottom: 0.3rem;
   }
 
   .subtitle {
     color: var(--color-muted);
-    margin-top: -0.3rem;
+    margin: 0;
   }
 
-  .root-items {
-    margin: 2rem 0;
-  }
-
-  .root-items .card-root {
-    display: block;
-    padding: 1.2rem 1.4rem;
-    border-radius: var(--radius);
-    border: 1px solid var(--color-border);
-    background: var(--color-surface);
-    margin-bottom: 0.8rem;
-  }
-
-  .category-grid {
+  /* 双栏：卡片网格 + 右侧 tag 边栏 */
+  .docs-layout {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1rem;
-    margin-top: 1.5rem;
+    grid-template-columns: 1fr 220px;
+    gap: 2.5rem;
+    align-items: start;
   }
 
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.2rem;
+  }
+
+  /* 卡片 —— 有图无图统一高度 */
   .card {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    padding: 1.2rem 1.4rem;
     border-radius: var(--radius);
     border: 1px solid var(--color-border);
     background: var(--color-surface);
-    transition: transform 0.12s ease, border-color 0.15s ease,
-      box-shadow 0.15s ease;
+    overflow: hidden;
+    transition: transform 0.14s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   }
 
   .card:hover {
     text-decoration: none;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     border-color: var(--color-primary);
-    box-shadow: 0 4px 16px rgba(217, 119, 87, 0.12);
+    box-shadow: 0 6px 20px rgba(217, 119, 87, 0.12);
+  }
+
+  /* 封面区：固定 16:9 比例 */
+  .card-cover {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--color-surface-muted);
+  }
+
+  .card-cover :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    margin: 0;
+  }
+
+  /* 无封面时的渐变占位 */
+  .card-cover-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+      135deg,
+      rgba(217, 119, 87, 0.18) 0%,
+      rgba(217, 119, 87, 0.06) 100%
+    );
+  }
+
+  :root[data-theme='dark'] .card-cover-fallback {
+    background: linear-gradient(
+      135deg,
+      rgba(239, 165, 129, 0.16) 0%,
+      rgba(239, 165, 129, 0.04) 100%
+    );
+  }
+
+  .cover-emoji {
+    font-size: 2.4rem;
+    line-height: 1;
+    opacity: 0.85;
+  }
+
+  .card-body {
+    padding: 1rem 1.1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
   }
 
   .card-title {
+    font-size: 1.05rem;
     font-weight: 600;
-    font-size: 1.1rem;
     color: var(--color-heading);
+    margin: 0 0 0.4rem;
+    line-height: 1.4;
   }
 
   .card-desc {
     color: var(--color-muted);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
+    margin: 0 0 0.7rem;
+    line-height: 1.5;
+    /* 限制两行 */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
   }
 
-  .card-count {
+  .card-meta {
     color: var(--color-muted);
+    font-size: 0.8rem;
+  }
+
+  /* 右侧 tag 边栏 */
+  .docs-sidebar {
+    position: sticky;
+    top: 80px;
+  }
+
+  .sidebar-block {
+    padding: 1.2rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+
+  .sidebar-title {
     font-size: 0.82rem;
-    margin-top: 0.3rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.9rem;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .sidebar-tag {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    color: var(--color-text);
+    font-size: 0.9rem;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .sidebar-tag:hover {
+    background: rgba(217, 119, 87, 0.1);
+    color: var(--color-primary-darker);
+    text-decoration: none;
+  }
+
+  :root[data-theme='dark'] .sidebar-tag:hover {
+    background: rgba(239, 165, 129, 0.1);
+    color: var(--color-primary);
+  }
+
+  .sidebar-tag-count {
+    color: var(--color-muted);
+    font-size: 0.78rem;
+    background: var(--color-surface-muted);
+    padding: 0.05rem 0.45rem;
+    border-radius: 10px;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  /* 响应式：窄屏时边栏移到顶部 */
+  @media (max-width: 900px) {
+    .docs-layout {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .docs-sidebar {
+      position: static;
+      order: -1;
+    }
   }
 </style>
