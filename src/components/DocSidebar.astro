@@ -1,0 +1,138 @@
+---
+import { getCollection } from 'astro:content';
+import { buildSidebar, type SidebarCategory, type SidebarItem } from '../lib/sidebar';
+
+interface Props {
+  /** 当前页面的站点绝对路径，用于高亮 */
+  currentPath?: string;
+}
+
+const { currentPath } = Astro.props;
+const entries = await getCollection('docs');
+const { rootItems, categories } = buildSidebar(entries);
+
+function isItemActive(url: string): boolean {
+  return currentPath === url;
+}
+---
+
+<aside class="doc-sidebar" aria-label="文档导航">
+  <nav>
+    {rootItems.length > 0 && (
+      <ul class="sidebar-group">
+        {rootItems.map((item: SidebarItem) => (
+          <li>
+            <a
+              href={item.url}
+              class={isItemActive(item.url) ? 'sidebar-link active' : 'sidebar-link'}
+            >
+              {item.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    {categories.map((cat: SidebarCategory) => (
+      <div class="sidebar-category">
+        <a
+          href={cat.url}
+          class="sidebar-category-title"
+        >
+          {cat.title}
+        </a>
+        {cat.items.length > 0 && (
+          <ul class="sidebar-group">
+            {cat.items.map((item: SidebarItem) => (
+              <li>
+                <a
+                  href={item.url}
+                  class={isItemActive(item.url) ? 'sidebar-link active' : 'sidebar-link'}
+                >
+                  {item.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    ))}
+  </nav>
+</aside>
+
+<style>
+  .doc-sidebar {
+    font-size: 0.92rem;
+    position: sticky;
+    top: 80px;
+    align-self: start;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+
+  .sidebar-group {
+    list-style: none;
+    padding: 0;
+    margin: 0.4rem 0 1rem;
+  }
+
+  .sidebar-group li {
+    margin: 0;
+  }
+
+  .sidebar-link {
+    display: block;
+    padding: 0.35rem 0.8rem;
+    color: var(--color-text);
+    border-radius: 6px;
+    border-left: 2px solid transparent;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .sidebar-link:hover {
+    background: var(--color-surface-muted);
+    color: var(--color-primary-dark);
+    text-decoration: none;
+  }
+
+  .sidebar-link.active {
+    background: rgba(217, 119, 87, 0.1);
+    color: var(--color-primary-darker);
+    font-weight: 600;
+    border-left-color: var(--color-primary);
+  }
+
+  :root[data-theme='dark'] .sidebar-link:hover {
+    color: var(--color-primary);
+  }
+  :root[data-theme='dark'] .sidebar-link.active {
+    background: rgba(239, 165, 129, 0.1);
+    color: var(--color-primary);
+  }
+
+  .sidebar-category {
+    margin-bottom: 1rem;
+  }
+
+  .sidebar-category-title {
+    display: block;
+    padding: 0.3rem 0.8rem;
+    color: var(--color-heading);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .sidebar-category-title:hover {
+    text-decoration: none;
+  }
+
+  @media (max-width: 900px) {
+    .doc-sidebar {
+      position: static;
+      max-height: none;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+  }
+</style>

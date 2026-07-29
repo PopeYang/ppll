@@ -1,0 +1,68 @@
+---
+/**
+ * 主题切换按钮。
+ * 注意：尽早设置 data-theme 的脚本由 Base.astro 在 <head> 内以 is:inline 注入，
+ * 防止首屏闪烁。本组件只负责按钮交互与持久化。
+ */
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  aria-label="切换明暗主题"
+  title="切换明暗主题"
+  class="theme-toggle"
+>
+  <span class="icon icon-sun" aria-hidden="true">☀</span>
+  <span class="icon icon-moon" aria-hidden="true">☾</span>
+</button>
+
+<style>
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text);
+    font-size: 1rem;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .theme-toggle:hover {
+    background: var(--color-surface-muted);
+  }
+
+  /* 浅色模式显示月亮（点击切到深色），深色模式显示太阳 */
+  :root[data-theme='light'] .icon-moon {
+    display: inline;
+  }
+  :root[data-theme='light'] .icon-sun {
+    display: none;
+  }
+  :root[data-theme='dark'] .icon-moon {
+    display: none;
+  }
+  :root[data-theme='dark'] .icon-sun {
+    display: inline;
+  }
+</style>
+
+<script>
+  const btn = document.getElementById('theme-toggle');
+  btn?.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme || 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    // 写入 localStorage 时单独 try/catch（隐私模式/存储受限不抛错）
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      /* 忽略写入失败 */
+    }
+  });
+</script>

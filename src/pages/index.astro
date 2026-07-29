@@ -1,0 +1,95 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+
+<Base>
+  <section class="hero">
+    <h1 class="hero-title">{site.title}</h1>
+    <p class="hero-subtitle">{site.tagline}</p>
+    <div class="hero-buttons">
+      <a class="btn btn-primary" href="/docs">📘 破破文档</a>
+      <a class="btn btn-secondary" href="/blog">📝 懒懒博客</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 4.5rem 1rem 3.5rem;
+    background: linear-gradient(
+      180deg,
+      rgba(217, 119, 87, 0.12) 0%,
+      rgba(217, 119, 87, 0.02) 100%
+    );
+    border-radius: 16px;
+    margin-top: 1.5rem;
+  }
+
+  :root[data-theme='dark'] .hero {
+    background: linear-gradient(
+      180deg,
+      rgba(239, 165, 129, 0.1) 0%,
+      rgba(239, 165, 129, 0.02) 100%
+    );
+  }
+
+  .hero-title {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-subtitle {
+    /* 手写体 —— 移植自 Docusaurus 的 Brush Script MT 栈 */
+    font-family: 'Brush Script MT', 'Segoe Script', 'Lucida Handwriting',
+      'Apple Chancery', cursive;
+    font-size: 2rem;
+    color: var(--color-text);
+    opacity: 0.9;
+    margin-bottom: 2rem;
+  }
+
+  .hero-buttons {
+    display: inline-flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.7rem 1.5rem;
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 1rem;
+    transition: transform 0.12s ease, background-color 0.15s ease,
+      border-color 0.15s ease;
+    border: 1px solid var(--color-border);
+  }
+
+  .btn:hover {
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+
+  .btn-primary {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-primary-dark);
+    color: #fff;
+  }
+
+  .btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  .btn-secondary:hover {
+    background: var(--color-surface-muted);
+  }
+</style>

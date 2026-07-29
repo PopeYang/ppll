@@ -1,45 +1,61 @@
-name: Deploy to GitHub Pages
+name: Build & Deploy
 
 on:
   push:
     branches:
       - main
-    # Review gh actions docs if you want to further define triggers, paths, etc
-    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+  pull_request:
+
+# 限制 push:main 只触发一次（PR 同时存在时避免重复）
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    name: Build Docusaurus
+    name: Build Astro
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
       - name: Install dependencies
         run: npm ci
-      - name: Build website
+
+      - name: Type check
+        run: npm run check
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Build
         run: npm run build
 
       - name: Upload Build Artifact
+        # PR 只验证构建，不上传、不部署
+        if: github.event_name == 'push'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build
+          path: dist
 
   deploy:
     name: Deploy to GitHub Pages
+    # 仅 push 到 main 才部署
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build
 
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
     permissions:
-      pages: write # to deploy to Pages
-      id-token: write # to verify the deployment originates from an appropriate source
+      pages: write
+      id-token: write
 
-    # Deploy to the github-pages environment
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

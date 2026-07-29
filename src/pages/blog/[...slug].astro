@@ -1,0 +1,28 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import BlogPost from '../../layouts/BlogPost.astro';
+import { getBlogPath, slugFromPath } from '../../lib/routes';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((entry: CollectionEntry<'blog'>) => {
+    const absolutePath = getBlogPath(entry);
+    return {
+      params: { slug: slugFromPath(absolutePath, '/blog/') },
+      props: { entry },
+    };
+  });
+}
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BlogPost entry={entry}>
+  <Content />
+</BlogPost>
