@@ -39,14 +39,14 @@ function isActive(href: string): boolean {
     z-index: 50;
     background-color: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
-    backdrop-filter: saturate(180%) blur(8px);
+    transition: background-color 0.15s ease;
   }
 
   .navbar-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 60px;
+    height: 64px;
   }
 
   .brand {
@@ -56,20 +56,22 @@ function isActive(href: string): boolean {
     color: var(--color-heading);
     font-weight: 600;
     font-size: 1.1rem;
+    transition: opacity 0.2s var(--ease);
   }
 
   .brand:hover {
     text-decoration: none;
+    opacity: 0.85;
   }
 
   .brand-logo {
-    border-radius: 4px;
+    border-radius: 6px;
   }
 
   .nav-items {
     display: inline-flex;
     align-items: center;
-    gap: 1.2rem;
+    gap: 1.5rem;
   }
 
   .nav-link {
@@ -90,8 +92,11 @@ function isActive(href: string): boolean {
     border-bottom-color: var(--color-primary);
   }
 
+  :root[data-theme='dark'] .navbar {
+    background-color: var(--color-bg);
+  }
+
   :root[data-theme='dark'] .nav-link:hover,
   :root[data-theme='dark'] .nav-link.active {
     color: var(--color-primary);
   }
-</style>

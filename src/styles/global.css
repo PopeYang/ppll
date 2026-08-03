@@ -7,23 +7,28 @@
    基础变量（浅色）
    ========================================= */
 :root {
-  /* 配色：陶土橙 */
-  --color-primary: #d97757;
-  --color-primary-dark: #c06245;
-  --color-primary-darker: #b5583e;
-  --color-primary-darkest: #974733;
-  --color-primary-light: #e28d6f;
+  /* 配色：Claude 风格 — 陶土橙 + 深邃蓝 */
+  --color-primary: #c15f3c;
+  --color-primary-dark: #a85032;
+  --color-primary-darker: #94462b;
+  --color-primary-darkest: #7a3a23;
+  --color-primary-light: #d47554;
 
-  /* 背景：暖纸色 + 白色表面 */
-  --color-bg: #faf9f5;
+  /* Claude 蓝 — 辅助色，用于链接、按钮强调 */
+  --color-accent: #1c6bbb;
+  --color-accent-dark: #165596;
+  --color-accent-light: #2e80d4;
+
+  /* 背景：暖纸色（更接近 Claude 的 Pampas） */
+  --color-bg: #f4f3ee;
   --color-surface: #ffffff;
-  --color-surface-muted: #f3f1eb;
+  --color-surface-muted: #ebe9e3;
 
   /* 文字 */
-  --color-text: #2e2a27;
-  --color-heading: #1a1918;
-  --color-muted: #6b635d;
-  --color-border: rgba(0, 0, 0, 0.08);
+  --color-text: #1f1e1d;
+  --color-heading: #181716;
+  --color-muted: #78746f;
+  --color-border: rgba(0, 0, 0, 0.06);
 
   /* 字体 */
   --font-base: "Söhne", "Inter", "Helvetica Neue", Helvetica, Arial,
@@ -31,19 +36,26 @@
   --font-heading: "Tiempos Headline", Georgia, "Times New Roman",
     "Songti SC", "SimSun", serif;
 
-  /* UI 细节 */
-  --radius: 8px;
-  --code-bg: rgba(217, 119, 87, 0.08);
+  /* UI 细节 — Claude 风格圆角 + 缓动曲线 */
+  --radius: 12px;
+  --radius-sm: 8px;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --code-bg: rgba(193, 95, 60, 0.06);
   --max-width: 1100px;
 
+  /* 阴影层级 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.06);
+
   /* admonition 各类型色（浅色） */
-  --admonition-warn-bg: rgba(217, 119, 87, 0.1);
-  --admonition-warn-border: #d97757;
-  --admonition-info-bg: rgba(59, 130, 246, 0.08);
-  --admonition-info-border: #3b82f6;
-  --admonition-note-bg: rgba(100, 116, 139, 0.08);
+  --admonition-warn-bg: rgba(193, 95, 60, 0.08);
+  --admonition-warn-border: #c15f3c;
+  --admonition-info-bg: rgba(28, 107, 187, 0.06);
+  --admonition-info-border: #1c6bbb;
+  --admonition-note-bg: rgba(100, 116, 139, 0.06);
   --admonition-note-border: #64748b;
-  --admonition-tip-bg: rgba(34, 197, 94, 0.08);
+  --admonition-tip-bg: rgba(34, 197, 94, 0.06);
   --admonition-tip-border: #22c55e;
 }
 
@@ -51,30 +63,38 @@
    深色模式
    ========================================= */
 :root[data-theme='dark'] {
-  --color-primary: #efa581;
-  --color-primary-dark: #e9946d;
-  --color-primary-darker: #e0845d;
-  --color-primary-darkest: #cc6a45;
-  --color-primary-light: #f2b89b;
+  --color-primary: #e89676;
+  --color-primary-dark: #d9805e;
+  --color-primary-darker: #cc6e4b;
+  --color-primary-darkest: #b85a38;
+  --color-primary-light: #f0aa8f;
 
-  --color-bg: #1a1918;
-  --color-surface: #252423;
-  --color-surface-muted: #2f2d2b;
+  --color-accent: #5ba0e4;
+  --color-accent-dark: #428bd3;
+  --color-accent-light: #7db5eb;
 
-  --color-text: #e3e0dd;
-  --color-heading: #f0edea;
-  --color-muted: #a8a39e;
-  --color-border: rgba(255, 255, 255, 0.08);
+  --color-bg: #181716;
+  --color-surface: #232220;
+  --color-surface-muted: #2d2c2a;
 
-  --code-bg: rgba(239, 165, 129, 0.12);
+  --color-text: #e8e6e3;
+  --color-heading: #f3f1ee;
+  --color-muted: #a5a09a;
+  --color-border: rgba(255, 255, 255, 0.06);
 
-  --admonition-warn-bg: rgba(239, 165, 129, 0.12);
-  --admonition-warn-border: #efa581;
-  --admonition-info-bg: rgba(96, 165, 250, 0.12);
-  --admonition-info-border: #60a5fa;
-  --admonition-note-bg: rgba(148, 163, 184, 0.12);
+  --code-bg: rgba(232, 150, 118, 0.1);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.15);
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.25);
+
+  --admonition-warn-bg: rgba(232, 150, 118, 0.1);
+  --admonition-warn-border: #e89676;
+  --admonition-info-bg: rgba(91, 160, 228, 0.1);
+  --admonition-info-border: #5ba0e4;
+  --admonition-note-bg: rgba(148, 163, 184, 0.1);
   --admonition-note-border: #94a3b8;
-  --admonition-tip-bg: rgba(74, 222, 128, 0.12);
+  --admonition-tip-bg: rgba(74, 222, 128, 0.1);
   --admonition-tip-border: #4ade80;
 }
 
@@ -93,12 +113,12 @@ html {
 
 body {
   margin: 0;
-  font-family: var(--font-base);
-  background-color: var(--color-bg);
+  background: var(--color-bg);
   color: var(--color-text);
-  line-height: 1.7;
-  font-size: 16px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  font-family: var(--font-base);
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1,
@@ -117,9 +137,9 @@ h6 {
 }
 
 h1 {
-  font-weight: 400;
-  font-size: 2.5rem;
-  margin-top: 0;
+  font-size: 2.25rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
 }
 
 h2 {
@@ -135,14 +155,15 @@ p {
 }
 
 a {
-  color: var(--color-primary-dark);
+  color: var(--color-accent);
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: color 0.2s var(--ease);
 }
 
 a:hover {
-  color: var(--color-primary);
+  color: var(--color-accent-dark);
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 :root[data-theme='dark'] a {
@@ -156,34 +177,35 @@ img {
 }
 
 code {
-  font-family: "JetBrains Mono", "Fira Code", "SFMono-Regular", Consolas,
-    "Liberation Mono", Menlo, monospace;
-  font-size: 0.9em;
+  font-family: 'Söhne Mono', 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  font-size: 0.875em;
   background: var(--code-bg);
-  padding: 0.15em 0.4em;
-  border-radius: 4px;
+  padding: 0.2em 0.45em;
+  border-radius: var(--radius-sm);
 }
 
 pre {
-  background: var(--color-surface-muted);
-  padding: 1em 1.2em;
-  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
   overflow-x: auto;
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
 }
 
 pre code {
-  background: none;
   padding: 0;
-  font-size: 0.875rem;
+  background: transparent;
+  font-size: 0.85rem;
+  line-height: 1.65;
 }
 
 blockquote {
-  margin: 1.2em 0;
-  padding: 0.5em 1.2em;
-  border-left: 4px solid var(--color-primary);
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 3px solid var(--color-primary);
   background: var(--color-surface-muted);
-  color: var(--color-muted);
   border-radius: 0 var(--radius) var(--radius) 0;
 }
 
@@ -192,9 +214,9 @@ blockquote p:last-child {
 }
 
 hr {
-  border: none;
+  border: 0;
   border-top: 1px solid var(--color-border);
-  margin: 2.5em 0;
+  margin: 2.5rem 0;
 }
 
 table {
@@ -263,9 +285,10 @@ ol {
    布局容器
    ========================================= */
 .container {
+  width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1.2rem;
+  padding: 0 1.5rem;
 }
 
 /* =========================================
@@ -338,13 +361,13 @@ ol {
 
 .prose a {
   text-decoration: underline;
-  text-underline-offset: 2px;
-  text-decoration-color: rgba(217, 119, 87, 0.3);
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(28, 107, 187, 0.25);
   text-decoration-thickness: 1px;
 }
 
 :root[data-theme='dark'] .prose a {
-  text-decoration-color: rgba(239, 165, 129, 0.3);
+  text-decoration-color: rgba(91, 160, 228, 0.25);
 }
 
 .prose a:hover {

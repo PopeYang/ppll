@@ -89,22 +89,24 @@ function fmtDate(d: Date): string {
     gap: 1.2rem;
   }
 
-  /* 卡片 —— 有图无图统一高度 */
+  /* 卡片 — Claude 风格柔和阴影 + 微妙 hover */
   .card {
     display: flex;
     flex-direction: column;
-    border-radius: var(--radius);
+    border-radius: 12px;
     border: 1px solid var(--color-border);
     background: var(--color-surface);
     overflow: hidden;
-    transition: transform 0.14s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    transition: transform 0.15s ease, border-color 0.15s ease,
+      box-shadow 0.15s ease;
   }
 
   .card:hover {
     text-decoration: none;
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     border-color: var(--color-primary);
-    box-shadow: 0 6px 20px rgba(217, 119, 87, 0.12);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
   }
 
   /* 封面区：固定 16:9 比例 */
@@ -134,16 +136,16 @@ function fmtDate(d: Date): string {
     justify-content: center;
     background: linear-gradient(
       135deg,
-      rgba(217, 119, 87, 0.18) 0%,
-      rgba(217, 119, 87, 0.06) 100%
+      rgba(193, 95, 60, 0.15) 0%,
+      rgba(193, 95, 60, 0.04) 100%
     );
   }
 
   :root[data-theme='dark'] .card-cover-fallback {
     background: linear-gradient(
       135deg,
-      rgba(239, 165, 129, 0.16) 0%,
-      rgba(239, 165, 129, 0.04) 100%
+      rgba(232, 150, 118, 0.12) 0%,
+      rgba(232, 150, 118, 0.03) 100%
     );
   }
 
@@ -214,29 +216,27 @@ function fmtDate(d: Date): string {
     flex-direction: column;
     gap: 0.1rem;
   }
-
   .sidebar-tag {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0.4rem 0.6rem;
-    border-radius: 6px;
+    border-radius: 8px;
     color: var(--color-text);
     font-size: 0.9rem;
     transition: background-color 0.15s ease, color 0.15s ease;
   }
 
   .sidebar-tag:hover {
-    background: rgba(217, 119, 87, 0.1);
+    background: rgba(193, 95, 60, 0.08);
     color: var(--color-primary-darker);
     text-decoration: none;
   }
 
   :root[data-theme='dark'] .sidebar-tag:hover {
-    background: rgba(239, 165, 129, 0.1);
+    background: rgba(232, 150, 118, 0.08);
     color: var(--color-primary);
   }
-
   .sidebar-tag-count {
     color: var(--color-muted);
     font-size: 0.78rem;
