@@ -111,20 +111,25 @@ function fmtDate(d: Date): string {
 
   .toot {
     margin-bottom: 1rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: 20px;
     background: var(--color-surface);
     overflow: hidden;
-    transition: border-color 0.15s ease;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.03),
+      0 0 0 1px rgba(0, 0, 0, 0.02);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   .toot:hover {
-    border-color: var(--color-primary);
+    transform: translateY(-1px);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.06),
+      0 0 0 1px rgba(0, 0, 0, 0.03);
   }
 
   .toot-link {
     display: block;
-    padding: 1.1rem 1.2rem;
+    padding: 1.25rem 1.5rem;
     color: inherit;
   }
 
@@ -139,8 +144,8 @@ function fmtDate(d: Date): string {
 
   .toot-avatar {
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     flex-shrink: 0;
   }
 
@@ -153,7 +158,7 @@ function fmtDate(d: Date): string {
     display: flex;
     align-items: baseline;
     gap: 0.6rem;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.4rem;
   }
 
   .toot-name {
@@ -194,8 +199,7 @@ function fmtDate(d: Date): string {
 
   .toot-media img {
     width: 100%;
-    border-radius: 6px;
-    border: 1px solid var(--color-border);
+    border-radius: 12px;
     margin: 0;
     box-shadow: none;
   }
@@ -207,19 +211,23 @@ function fmtDate(d: Date): string {
 
   .btn {
     display: inline-block;
-    padding: 0.6rem 1.4rem;
-    border-radius: var(--radius);
-    border: 1px solid var(--color-border);
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
     background: var(--color-surface);
     color: var(--color-text);
     font-size: 0.95rem;
-    transition: border-color 0.15s ease, transform 0.12s ease;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.03),
+      0 0 0 1px rgba(0, 0, 0, 0.02);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   .btn:hover {
-    border-color: var(--color-primary);
     color: var(--color-primary-dark);
     text-decoration: none;
     transform: translateY(-1px);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.06),
+      0 0 0 1px rgba(0, 0, 0, 0.03);
   }
 </style>
