@@ -89,24 +89,25 @@ function fmtDate(d: Date): string {
     gap: 1.2rem;
   }
 
-  /* 卡片 — Claude 风格柔和阴影 + 微妙 hover */
+  /* Vapor 风格卡片 — 超大圆角、柔和阴影、无边框 */
   .card {
     display: flex;
     flex-direction: column;
-    border-radius: 12px;
-    border: 1px solid var(--color-border);
+    border-radius: 20px;
     background: var(--color-surface);
     overflow: hidden;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-    transition: transform 0.15s ease, border-color 0.15s ease,
-      box-shadow 0.15s ease;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.03),
+      0 0 0 1px rgba(0, 0, 0, 0.02);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
 
   .card:hover {
     text-decoration: none;
-    transform: translateY(-2px);
-    border-color: var(--color-primary);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transform: translateY(-3px);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(0, 0, 0, 0.03);
   }
 
   /* 封面区：固定 16:9 比例 */
@@ -135,17 +136,18 @@ function fmtDate(d: Date): string {
     align-items: center;
     justify-content: center;
     background: linear-gradient(
-      135deg,
-      rgba(193, 95, 60, 0.15) 0%,
-      rgba(193, 95, 60, 0.04) 100%
+      155deg,
+      rgba(193, 95, 60, 0.12) 0%,
+      rgba(193, 95, 60, 0.02) 100%
     );
+    border-radius: 20px 20px 0 0;
   }
 
   :root[data-theme='dark'] .card-cover-fallback {
     background: linear-gradient(
-      135deg,
-      rgba(232, 150, 118, 0.12) 0%,
-      rgba(232, 150, 118, 0.03) 100%
+      155deg,
+      rgba(232, 150, 118, 0.1) 0%,
+      rgba(232, 150, 118, 0.02) 100%
     );
   }
 
@@ -156,24 +158,24 @@ function fmtDate(d: Date): string {
   }
 
   .card-body {
-    padding: 1rem 1.1rem 1.1rem;
+    padding: 1.25rem 1.5rem 1.5rem;
     display: flex;
     flex-direction: column;
     flex: 1;
   }
 
   .card-title {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-weight: 600;
     color: var(--color-heading);
-    margin: 0 0 0.4rem;
+    margin: 0 0 0.5rem;
     line-height: 1.4;
   }
 
   .card-desc {
     color: var(--color-muted);
-    font-size: 0.88rem;
-    margin: 0 0 0.7rem;
+    font-size: 0.9rem;
+    margin: 0 0 0.75rem;
     line-height: 1.5;
     /* 限制两行 */
     display: -webkit-box;

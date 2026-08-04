@@ -5,49 +5,54 @@ import { site } from '../data/site';
 
 <Base>
   <section class="hero">
-    <h1 class="hero-title">{site.title}</h1>
-    <p class="hero-subtitle">{site.tagline}</p>
-    <div class="hero-buttons">
-      <a class="btn btn-primary" href="/docs">📘 破破文档</a>
-      <a class="btn btn-secondary" href="/now">💬 动态</a>
+    <div class="hero-content">
+      <h1 class="hero-title">{site.title}</h1>
+      <p class="hero-subtitle">{site.tagline}</p>
+      <p class="hero-desc">技术探索 · 踩坑实录 · 碎碎念</p>
+      <div class="hero-buttons">
+        <a class="btn btn-primary" href="/docs">📘 开始阅读</a>
+        <a class="btn btn-secondary" href="/now">💬 最近动态</a>
+      </div>
     </div>
   </section>
 </Base>
-
 <style>
   .hero {
-    text-align: center;
-    padding: 4rem 1rem 3rem;
-    background: var(--color-surface);
-    border-radius: var(--radius);
-    margin-top: 2rem;
-    border: 1px solid var(--color-border);
+    padding: 3rem 2rem;
+    margin-top: 1rem;
   }
 
-  :root[data-theme='dark'] .hero {
-    background: var(--color-surface);
+  .hero-content {
+    max-width: 640px;
   }
 
   .hero-title {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
     letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+    color: var(--color-heading);
   }
 
   .hero-subtitle {
-    /* 手写体 — 移植自 Docusaurus 的 Brush Script MT 栈 */
     font-family: 'Brush Script MT', 'Segoe Script', 'Lucida Handwriting',
       'Apple Chancery', cursive;
-    font-size: 2rem;
-    color: var(--color-text);
+    font-size: 1.75rem;
+    color: var(--color-primary);
     opacity: 0.9;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-desc {
+    color: var(--color-muted);
+    font-size: 1.1rem;
     margin-bottom: 2.5rem;
   }
 
   .hero-buttons {
     display: flex;
-    gap: 1rem;
-    justify-content: center;
+    gap: 0.75rem;
     flex-wrap: wrap;
   }
 
@@ -82,13 +87,13 @@ import { site } from '../data/site';
   }
 
   .btn-secondary {
-    background: var(--color-surface-muted);
+    background: var(--color-surface);
     color: var(--color-text);
     border-color: var(--color-border);
   }
 
   .btn-secondary:hover {
-    background: var(--color-border);
+    background: var(--color-surface-muted);
   }
 
   :root[data-theme='dark'] .btn-primary {
@@ -100,9 +105,10 @@ import { site } from '../data/site';
   }
 
   :root[data-theme='dark'] .btn-secondary {
-    background: var(--color-surface-muted);
+    background: var(--color-surface);
   }
 
   :root[data-theme='dark'] .btn-secondary:hover {
-    background: var(--color-border);
+    background: var(--color-surface-muted);
   }
+</style>
