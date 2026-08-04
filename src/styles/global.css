@@ -271,11 +271,6 @@ ol {
   border-color: var(--admonition-info-border);
 }
 
-.admonition-note {
-  background: var(--admonition-note-bg);
-  border-color: var(--admonition-note-border);
-}
-
 .admonition-tip {
   background: var(--admonition-tip-bg);
   border-color: var(--admonition-tip-border);
