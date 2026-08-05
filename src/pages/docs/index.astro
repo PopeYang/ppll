@@ -1,6 +1,9 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
+import { getDocPath } from '../../lib/routes';
+import { tagUrl } from '../../lib/tags';
+import { sections } from '../../data/site';
 
 const entries = await getCollection('docs');
 const posts = entries
@@ -9,17 +12,17 @@ const posts = entries
 const tags = [...new Set(posts.flatMap(p => p.data.tags || []))];
 ---
 
-<Base title="凭岚文库" description="技术探索的笔记与踩坑实录">
+<Base title={sections.docs.nav} description="技术探索的笔记与踩坑实录">
   <div class="docs-layout">
     <main class="docs-main">
       <header class="page-header">
-        <h1>凭岚文库</h1>
+        <h1>{sections.docs.ui}</h1>
       </header>
 
       <div class="article-list">
         {posts.map((post) => (
           <article class="article-item">
-            <a href={`/docs/${post.slug}/`} class="article-link">
+            <a href={getDocPath(post)} class="article-link">
               <h3 class="article-title">{post.data.title}</h3>
               {post.data.description && (
                 <p class="article-excerpt">{post.data.description}</p>
@@ -38,7 +41,7 @@ const tags = [...new Set(posts.flatMap(p => p.data.tags || []))];
         <h3 class="sidebar-title">标签</h3>
         <nav class="tag-list">
           {tags.map((tag) => (
-            <a href={`/docs/tag/${encodeURIComponent(tag)}/`} class="sidebar-tag">
+            <a href={tagUrl(tag)} class="sidebar-tag">
               {tag}
             </a>
           ))}

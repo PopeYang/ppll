@@ -1,6 +1,6 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
-import { site } from '../data/site';
+import { site, sections } from '../data/site';
 
 const { pathname } = Astro.url;
 // 高亮当前激活的导航项（去除尾部斜杠后比较）
@@ -19,8 +19,16 @@ function isActive(href: string): boolean {
     </a>
 
     <nav class="nav-items" aria-label="主导航">
-      <a href="/docs" class={isActive('/docs') ? 'nav-link active' : 'nav-link'}>文库</a>
-      <a href="/now" class={isActive('/now') ? 'nav-link active' : 'nav-link'}>动态</a>
+      <a href="/docs" class={isActive('/docs') ? 'nav-link active' : 'nav-link'}
+        ><span class="label-long">{sections.docs.nav}</span><span class="label-short"
+          >文库</span
+        ></a
+      >
+      <a href="/now" class={isActive('/now') ? 'nav-link active' : 'nav-link'}
+        ><span class="label-long">{sections.now.nav}</span><span class="label-short"
+          >动态</span
+        ></a
+      >
       <a
         href={site.githubUrl}
         class="nav-link external"
@@ -114,6 +122,21 @@ function isActive(href: string): boolean {
     color: var(--color-primary-dark);
     background: rgba(193, 95, 60, 0.08);
     font-weight: 500;
+  }
+
+  /* 窄屏回落到短名：两个七字长名 + GitHub + 主题开关会撑破胶囊 */
+  .label-short {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .label-long {
+      display: none;
+    }
+
+    .label-short {
+      display: inline;
+    }
   }
 
   :root[data-theme='dark'] .navbar-inner {

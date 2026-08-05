@@ -2,6 +2,8 @@
 import type { CollectionEntry } from 'astro:content';
 import Base from './Base.astro';
 import { getDocPath } from '../lib/routes';
+import { tagUrl } from '../lib/tags';
+import { sections } from '../data/site';
 
 interface Props {
   entry: CollectionEntry<'docs'>;
@@ -21,7 +23,7 @@ const dateStr = date.toLocaleDateString('zh-CN', {
   <article class="doc">
     <header class="doc-header">
       <div class="doc-breadcrumb">
-        <a href="/docs/">文档</a>
+        <a href="/docs/">{sections.docs.ui}</a>
       </div>
       <h1>{title}</h1>
       {description && <p class="doc-description">{description}</p>}
@@ -30,7 +32,7 @@ const dateStr = date.toLocaleDateString('zh-CN', {
         {tags.length > 0 && (
           <span class="doc-tags">
             {tags.map((t: string) => (
-              <a href={`/docs/tag/${t}/`} class="tag">#{t}</a>
+              <a href={tagUrl(t)} class="tag">#{t}</a>
             ))}
           </span>
         )}
@@ -42,7 +44,7 @@ const dateStr = date.toLocaleDateString('zh-CN', {
     </div>
 
     <footer class="doc-footer">
-      <a href="/docs/">← 返回文档</a>
+      <a href="/docs/">← 返回{sections.docs.ui}</a>
     </footer>
   </article>
 </Base>

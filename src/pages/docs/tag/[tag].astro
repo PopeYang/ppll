@@ -3,10 +3,25 @@ import Base from '../../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import { toDocList, collectTags, tagToSlug } from '../../../lib/tags';
+import { sections } from '../../../data/site';
 
 export async function getStaticPaths() {
   const entries = await getCollection('docs');
   const tags = collectTags(entries);
+  // slug 折叠有损（C++ → c-plus-plus），两个标签可能撞到同一个 slug。
+  // 与其静默覆盖一页，不如构建期直接失败。
+  const seen = new Map<string, string>();
+  for (const { tag } of tags) {
+    const slug = tagToSlug(tag);
+    const prev = seen.get(slug);
+    if (prev !== undefined && prev !== tag) {
+      throw new Error(`标签 slug 冲突：「${prev}」与「${tag}」都映射到 "${slug}"`);
+    }
+    seen.set(slug, tag);
+  }
+
+  // params 传 slug 原文（未编码）：Astro 生成路径时自行编码，dev 路由
+  // decodeURI 后与之比对。slug 内已无 URL 保留字符，两侧因此一致。
   return tags.map(({ tag, count }) => ({
     params: { tag: tagToSlug(tag) },
     props: { tag, count },
@@ -30,7 +45,7 @@ function fmtDate(d: Date): string {
 <Base title={`#${tag}`} description={`标记为 ${tag} 的文档`}>
   <header class="page-header">
     <div class="breadcrumb">
-      <a href="/docs/">文档</a> <span class="sep">/</span> <span>#{tag}</span>
+      <a href="/docs/">{sections.docs.ui}</a> <span class="sep">/</span> <span>#{tag}</span>
     </div>
     <h1>#{tag}</h1>
     <p class="subtitle">共 {count} 篇</p>

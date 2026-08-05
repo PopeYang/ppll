@@ -1,37 +1,29 @@
 ---
 import Base from '../layouts/Base.astro';
-import { site } from '../data/site';
+import { site, sections } from '../data/site';
 import { getCollection } from 'astro:content';
+import { getDocPath } from '../lib/routes';
+import { fetchMastodon } from '../lib/mastodon';
 
 // 获取最近的文档
 const entries = await getCollection('docs');
 const recentPosts = entries
   .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
-  .slice(0, 8);
+  .slice(0, 6);
 
-// 动态数据
-const fakeToots = [
-  {
-    id: 1,
-    date: new Date(),
-    content: "今天把博客的主题终于定下来了 —— 「凭岚」，山野长风任几许。折腾了一下午的排版，看着还挺有那味儿的 🍃",
-  },
-  {
-    id: 2,
-    date: new Date(Date.now() - 86400000 * 2),
-    content: "发现 Astro 的开发体验真的比之前用的都好，增量编译快到飞起。就是有时候样式改着改着文件结构就乱了…",
-  },
-  {
-    id: 3,
-    date: new Date(Date.now() - 86400000 * 5),
-    content: "周末终于把 FreeCAD 的构建流程跑通了。文档写了一半，后面慢慢补。开源软件的编译真是一门玄学 🫠",
-  },
-  {
-    id: 4,
-    date: new Date(Date.now() - 86400000 * 7),
-    content: "从 SVN 迁移到 Git，路径处理踩了不少坑。总结了几条最佳实践，后面整理出来发文库。",
-  },
-];
+// 侧栏动态：构建期拉取 Mastodon，与 /now 页同源。
+// 拉取失败时 toots 为空数组，侧栏优雅降级为一条提示。
+const profile = await fetchMastodon();
+const recentToots = profile.toots.slice(0, 6);
+
+/** 侧栏空间窄，把嘟文 HTML 压成纯文本并截断 */
+function toExcerpt(html: string, max = 60): string {
+  const text = html
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return text.length > max ? text.slice(0, max) + '…' : text;
+}
 ---
 
 <Base>
@@ -44,10 +36,12 @@ const fakeToots = [
         </p>
       </header>
 
+      <h2 class="section-title">{sections.docs.ui}</h2>
+
       <div class="post-list">
         {recentPosts.map((post) => (
           <article class="post-item">
-            <a href={`/docs/${post.slug}/`} class="post-link">
+            <a href={getDocPath(post)} class="post-link">
               <h3 class="post-title">{post.data.title}</h3>
               {post.data.description && (
                 <p class="post-excerpt">{post.data.description}</p>
@@ -66,20 +60,29 @@ const fakeToots = [
     </main>
 
     <aside class="timeline-side">
-      <h2 class="timeline-title">风过留痕</h2>
+      <h2 class="section-title">{sections.now.ui}</h2>
       <div class="timeline-list">
-        {fakeToots.map((toot) => (
-          <div class="timeline-item" key={toot.id}>
-            <time class="timeline-time">
-              {new Date(toot.date).toLocaleDateString('zh-CN', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
-            </time>
-            <p class="timeline-content">{toot.content}</p>
-          </div>
-        ))}
+        {recentToots.length === 0 ? (
+          <p class="timeline-empty">暂时拉不到动态。</p>
+        ) : (
+          recentToots.map((toot) => (
+            <a
+              href={toot.url}
+              class="timeline-item"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <time class="timeline-time" datetime={toot.pubDate.toISOString()}>
+                {toot.pubDate.toLocaleDateString('zh-CN', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </time>
+              <p class="timeline-content">{toExcerpt(toot.contentHtml)}</p>
+            </a>
+          ))
+        )}
       </div>
 
       <div class="more-link">
@@ -186,24 +189,42 @@ const fakeToots = [
     padding-top: 1rem;
   }
 
-  .timeline-title {
+  /* 两栏共用的栏目小标题（山间结庐 / 风过留痕） */
+  .section-title {
     font-size: 0.9rem;
     font-weight: 500;
     letter-spacing: 0.1em;
     color: var(--color-muted);
-    text-transform: uppercase;
     margin: 0 0 1.5rem;
   }
 
   .timeline-list {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.35rem;
     margin-bottom: 2rem;
   }
 
   .timeline-item {
     position: relative;
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .timeline-item:hover .timeline-content {
+    color: var(--color-primary-dark);
+  }
+
+  :root[data-theme='dark'] .timeline-item:hover .timeline-content {
+    color: var(--color-primary);
+  }
+
+  .timeline-empty {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin: 0;
+    opacity: 0.8;
   }
 
   .timeline-time {
@@ -220,6 +241,7 @@ const fakeToots = [
     line-height: 1.7;
     color: var(--color-text);
     margin: 0;
+    transition: color 0.15s ease;
   }
 
   .more-link {
