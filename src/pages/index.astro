@@ -30,13 +30,13 @@ function toExcerpt(html: string, max = 60): string {
   <div class="layout-container">
     <main class="content-side">
       <header class="page-header">
-        <p class="site-tagline">
+        <p class="site-tagline with-author">
           {site.tagline}
           <span class="site-author">by ppy</span>
         </p>
       </header>
 
-      <h2 class="section-title">{sections.docs.ui}</h2>
+      <h2 class="section-title">{sections.docs.nav}</h2>
 
       <div class="post-list">
         {recentPosts.map((post) => (
@@ -60,7 +60,7 @@ function toExcerpt(html: string, max = 60): string {
     </main>
 
     <aside class="timeline-side">
-      <h2 class="section-title">{sections.now.ui}</h2>
+      <h2 class="section-title">{sections.now.nav}</h2>
       <div class="timeline-list">
         {recentToots.length === 0 ? (
           <p class="timeline-empty">暂时拉不到动态。</p>
@@ -110,32 +110,6 @@ function toExcerpt(html: string, max = 60): string {
     margin-bottom: 3rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid var(--color-border);
-  }
-
-  .site-tagline {
-    position: relative;
-    font-family: Georgia, 'Noto Serif CJK SC', 'Songti SC', SimSun, serif;
-    font-size: 2rem;
-    color: var(--color-primary);
-    opacity: 0.85;
-    margin: 0;
-    letter-spacing: 0.1em;
-    line-height: 1.4;
-    padding-right: 7rem;
-    padding-bottom: 0.5rem;
-  }
-
-  .site-author {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    font-family: 'Brush Script MT', 'Segoe Script', 'Lucida Handwriting',
-      'Apple Chancery', cursive;
-    font-size: 1.25rem;
-    color: var(--color-muted);
-    letter-spacing: 0.05em;
-    font-weight: 400;
-    opacity: 0.8;
   }
 
   .post-list {
@@ -189,7 +163,6 @@ function toExcerpt(html: string, max = 60): string {
     padding-top: 1rem;
   }
 
-  /* 两栏共用的栏目小标题（山间结庐 / 风过留痕） */
   .section-title {
     font-size: 0.9rem;
     font-weight: 500;
@@ -275,15 +248,6 @@ function toExcerpt(html: string, max = 60): string {
     .timeline-side {
       padding-top: 2rem;
       border-top: 1px solid var(--color-border);
-    }
-
-    .site-tagline {
-      font-size: 1.5rem;
-      padding-right: 5rem;
-    }
-
-    .site-author {
-      font-size: 1rem;
     }
   }
 </style>

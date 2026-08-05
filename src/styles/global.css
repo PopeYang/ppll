@@ -373,3 +373,50 @@ ol {
   margin: 3em 0;
 }
 
+
+/* =========================================
+   全局共用标题样式 (7字)
+   ========================================= */
+.site-tagline {
+  position: relative;
+  font-family: Georgia, 'Noto Serif CJK SC', 'Songti SC', SimSun, serif;
+  font-size: 2rem;
+  color: var(--color-primary);
+  opacity: 0.85;
+  margin: 0;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.site-tagline.with-author {
+  padding-right: 7rem;
+  display: block;
+}
+
+.site-author {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  font-family: 'Brush Script MT', 'Segoe Script', 'Lucida Handwriting',
+    'Apple Chancery', cursive;
+  font-size: 1.25rem;
+  color: var(--color-muted);
+  letter-spacing: 0.05em;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+@media (max-width: 900px) {
+  .site-tagline {
+    font-size: 1.5rem;
+  }
+  .site-tagline.with-author {
+    padding-right: 5rem;
+  }
+  .site-author {
+    font-size: 1rem;
+  }
+}
+

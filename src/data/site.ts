@@ -17,6 +17,6 @@ export const site = {
  *  文章取山（可居可循），动态取风（转瞬即逝）。
  */
 export const sections = {
-  docs: { ui: '山间结庐', nav: '人生何处不青山' },
-  now: { ui: '风过留痕', nav: '且将心绪付长风' },
+  docs: { ui: '人生何处不青山', nav: '山间结庐' },
+  now: { ui: '且将心绪付长风', nav: '风过留痕' },
 } as const;

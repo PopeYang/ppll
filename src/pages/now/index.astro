@@ -23,7 +23,7 @@ function fmtDate(d: Date): string {
 <Base title={sections.now.nav} description="ppy 的 Mastodon 动态">
   <section class="now-page">
     <header class="page-header">
-      <h1>{sections.now.ui}</h1>
+      <h1 class="site-tagline">{sections.now.ui}</h1>
       <p class="subtitle">
         来自 <a href={profile.link} target="_blank" rel="noopener noreferrer">@ppy@mas.to</a>
         的碎碎念。
@@ -85,9 +85,6 @@ function fmtDate(d: Date): string {
     margin-bottom: 2rem;
   }
 
-  .page-header h1 {
-    margin-bottom: 0.3rem;
-  }
 
   .subtitle {
     color: var(--color-muted);

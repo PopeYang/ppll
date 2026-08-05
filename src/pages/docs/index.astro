@@ -16,7 +16,7 @@ const tags = [...new Set(posts.flatMap(p => p.data.tags || []))];
   <div class="docs-layout">
     <main class="docs-main">
       <header class="page-header">
-        <h1>{sections.docs.ui}</h1>
+        <h1 class="site-tagline">{sections.docs.ui}</h1>
       </header>
 
       <div class="article-list">
@@ -71,13 +71,7 @@ const tags = [...new Set(posts.flatMap(p => p.data.tags || []))];
     border-bottom: 1px solid var(--color-border);
   }
 
-  .page-header h1 {
-    font-size: 1.8rem;
-    font-weight: 300;
-    letter-spacing: 0.1em;
-    margin: 0;
-    color: var(--color-heading);
-  }
+
 
   /* 纯文本文章列表 */
   .article-list {
