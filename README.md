@@ -1,6 +1,9 @@
-# 破破烂烂小博客
+# 凭岚
 
 ppy 的个人博客与技术文档，基于 [Astro](https://astro.build/) 构建。
+
+栏目命名见 `src/data/site.ts` 的 `sections`：页面内用短名（山间结庐 / 风过留痕），
+浏览器标签页与顶部导航用长名（人生何处不青山 / 且将心绪付长风）。
 
 ## 常用命令
 
@@ -15,9 +18,9 @@ ppy 的个人博客与技术文档，基于 [Astro](https://astro.build/) 构建
 
 ## 目录约定
 
-- `src/content/blog/` — 博客文章（Markdown）
-- `src/content/docs/` — 技术文档（按目录分类，每目录放一个 `_index.md` 作为分类入口）
-- `src/lib/routes.ts` — 统一的 URL 生成工具（canonical / RSS / sidebar 共用）
+- `src/content/docs/` — 全部原创内容（Markdown），已拍平，用 frontmatter 的 `tags` 区分类型
+- `src/lib/routes.ts` — 统一的 URL 生成工具（canonical / RSS / 列表页共用）
+- `src/lib/tags.ts` — 标签统计与 URL 编码（`tagToSlug`）
 - `public/` — 静态资源（CNAME、favicon、图片）
 
 ## 部署
