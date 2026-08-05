@@ -10,3 +10,13 @@ export const site = {
   url: 'https://ppll.top',
   githubUrl: 'https://github.com/popeyang',
 } as const;
+
+/** 两个栏目的命名。
+ *  ui   —— 页面内的小标题（短，作版式用）
+ *  nav  —— 浏览器标签页与顶部胶囊（长，作意境用）
+ *  文章取山（可居可循），动态取风（转瞬即逝）。
+ */
+export const sections = {
+  docs: { ui: '山间结庐', nav: '人生何处不青山' },
+  now: { ui: '风过留痕', nav: '且将心绪付长风' },
+} as const;
