@@ -43,12 +43,17 @@ function isActive(href: string): boolean {
 <style>
   .site-header {
     position: fixed;
-    top: 1rem;
+    top: 0;
     left: 0;
     right: 0;
     z-index: 50;
     pointer-events: none;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
+  }
+
+  .site-header.scrolled {
+    padding: 1rem 1rem 0;
   }
 
   .site-header.hidden {
@@ -60,8 +65,17 @@ function isActive(href: string): boolean {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 1100px;
+    max-width: 100%;
     margin: 0 auto;
+    padding: 0.75rem 2rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .site-header.scrolled .navbar-inner {
+    max-width: 900px;
     padding: 0.5rem 0.75rem;
     background: linear-gradient(
       135deg,
@@ -74,6 +88,7 @@ function isActive(href: string): boolean {
       0 0 0 1px rgba(0, 0, 0, 0.04);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom-color: transparent;
   }
 
   .brand {
@@ -140,6 +155,10 @@ function isActive(href: string): boolean {
   }
 
   :root[data-theme='dark'] .navbar-inner {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+  }
+
+  :root[data-theme='dark'] .site-header.scrolled .navbar-inner {
     background: linear-gradient(
       135deg,
       rgba(35, 34, 32, 0.8),
@@ -148,6 +167,7 @@ function isActive(href: string): boolean {
     box-shadow:
       0 4px 24px rgba(0, 0, 0, 0.15),
       0 0 0 1px rgba(255, 255, 255, 0.06);
+    border-bottom-color: transparent;
   }
 
   :root[data-theme='dark'] .brand:hover {
@@ -165,20 +185,23 @@ function isActive(href: string): boolean {
   (function() {
     let lastScrollY = window.scrollY;
     const header = document.querySelector('.site-header');
-    const threshold = 50;
+    const scrollThreshold = 20;
 
-    window.addEventListener('scroll', function() {
+    function updateHeader() {
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > lastScrollY && currentScrollY > threshold) {
-        // 向下滚动 -> 隐藏
-        header.classList.add('hidden');
+      if (currentScrollY > scrollThreshold) {
+        header.classList.add('scrolled');
       } else {
-        // 向上滚动 -> 显示
-        header.classList.remove('hidden');
+        header.classList.remove('scrolled');
       }
 
       lastScrollY = currentScrollY;
-    }, { passive: true });
+    }
+
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    
+    // Initial check
+    updateHeader();
   })();
 </script>
