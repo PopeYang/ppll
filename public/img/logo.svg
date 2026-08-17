@@ -1,52 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
- <title id="title">ppll logo — colorful tiles (fixed)</title>
- <desc id="desc">Square logo with four rounded colorful tiles containing stylized letters p p l l</desc>
- 
- <defs>
- <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
- <feOffset in="SourceAlpha" dx="0" dy="6" result="off"/>
- <feGaussianBlur in="off" stdDeviation="8" result="blur"/>
- <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0" result="shadow"/>
- <feBlend in="SourceGraphic" in2="shadow" mode="normal"/>
- </filter>
- </defs>
- 
- <!-- background -->
- <rect width="512" height="512" rx="48" fill="#FFF9F0"/>
- 
- <!-- top-left: first 'p' -->
- <g transform="translate(28,28) rotate(-6 110 110)" filter="url(#shadow)">
- <rect width="220" height="220" rx="28" fill="#FF6B6B"/>
- <g transform="translate(110,110)" fill="#ffffff">
- <rect x="-52" y="-40" width="36" height="120" rx="18"/>
- <circle cx="8" cy="-6" r="44"/>
- </g>
- </g>
- 
- <!-- top-right: second 'p' (FIXED, not mirrored) -->
- <g transform="translate(260,28) rotate(5 110 110)" filter="url(#shadow)">
- <rect width="220" height="220" rx="28" fill="#FFD166"/>
- <g transform="translate(110,110)" fill="#ffffff">
- <rect x="-52" y="-40" width="36" height="120" rx="18"/>
- <circle cx="8" cy="-6" r="44"/>
- </g>
- </g>
- 
- <!-- bottom-left: first 'l' -->
- <g transform="translate(28,260) rotate(4 110 110)" filter="url(#shadow)">
- <rect width="220" height="220" rx="28" fill="#06D6A0"/>
- <g transform="translate(110,110)" fill="#ffffff">
- <rect x="-16" y="-62" width="36" height="140" rx="12"/>
- </g>
- </g>
- 
- <!-- bottom-right: second 'l' -->
- <g transform="translate(260,260) rotate(-4 110 110)" filter="url(#shadow)">
- <rect width="220" height="220" rx="28" fill="#4D96FF"/>
- <g transform="translate(110,110)" fill="#ffffff">
- <rect x="-16" y="-62" width="36" height="140" rx="12"/>
- </g>
- </g>
- 
- </svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">凭岚 Pinglan Logo v3</title>
+  <desc id="desc">Ink-wash mountains on parchment background with a single ink-blue mist accent</desc>
+
+  <!-- 暖羊皮纸背景 -->
+  <rect width="512" height="512" rx="100" fill="#f5f4ed" />
+
+  <!-- 后山：墨色（无彩色，仅明度分层） -->
+  <path d="M 132 408 L 300 112 L 468 408 Z" fill="#2f2c28" stroke="#2f2c28" stroke-width="24" stroke-linejoin="round" />
+
+  <!-- 前山：淡墨灰 -->
+  <path d="M 60 408 L 192 188 L 328 408 Z" fill="#8c8779" stroke="#8c8779" stroke-width="24" stroke-linejoin="round" />
+
+  <!-- 上层风雾 镂空遮罩 -->
+  <path d="M 115 220 Q 200 140 300 220 T 465 220" fill="none" stroke="#f5f4ed" stroke-width="26" stroke-linecap="round" />
+  <!-- 上层风雾 -->
+  <path d="M 115 220 Q 200 140 300 220 T 465 220" fill="none" stroke="#1B365D" stroke-width="12" stroke-linecap="round" />
+
+  <!-- 下层风雾 镂空遮罩 -->
+  <path d="M 60 320 Q 150 240 260 320 T 460 320" fill="none" stroke="#f5f4ed" stroke-width="34" stroke-linecap="round" />
+  <!-- 下层风雾 -->
+  <path d="M 60 320 Q 150 240 260 320 T 460 320" fill="none" stroke="#1B365D" stroke-width="16" stroke-linecap="round" />
+
+</svg>
