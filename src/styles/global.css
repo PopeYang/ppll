@@ -7,28 +7,28 @@
    基础变量（浅色）
    ========================================= */
 :root {
-  /* 配色：Claude 风格 — 陶土橙 + 深邃蓝 */
-  --color-primary: #c15f3c;
-  --color-primary-dark: #a85032;
-  --color-primary-darker: #94462b;
-  --color-primary-darkest: #7a3a23;
-  --color-primary-light: #d47554;
+  /* 配色：凭岚水墨印风 — 黛蓝主色 + 宣纸背景 */
+  --color-primary: #1B365D;       /* 黛蓝 / 深墨蓝 */
+  --color-primary-dark: #142b4b;
+  --color-primary-darker: #0f2038;
+  --color-primary-darkest: #0a1525;
+  --color-primary-light: #315486;
 
-  /* Claude 蓝 — 辅助色，用于链接、按钮强调 */
-  --color-accent: #1c6bbb;
-  --color-accent-dark: #165596;
-  --color-accent-light: #2e80d4;
+  /* 辅助/强调色，用于链接、高亮 */
+  --color-accent: #2B5894;        /* 稍亮一些的墨蓝，保障链接可读性 */
+  --color-accent-dark: #1B365D;
+  --color-accent-light: #4e7bb6;
 
-  /* 背景：暖纸色（更接近 Claude 的 Pampas） */
-  --color-bg: #f4f3ee;
+  /* 背景：暖宣纸色（取自 logo.svg 背景色 #f5f4ed） */
+  --color-bg: #f5f4ed;
   --color-surface: #ffffff;
-  --color-surface-muted: #ebe9e3;
+  --color-surface-muted: #eae8dc; /* 宣纸深色变体 */
 
-  /* 文字 */
-  --color-text: #1f1e1d;
-  --color-heading: #181716;
-  --color-muted: #78746f;
-  --color-border: rgba(0, 0, 0, 0.06);
+  /* 文字：老墨色（取自 logo.svg 后山色 #2f2c28） */
+  --color-text: #2f2c28;
+  --color-heading: #2f2c28;
+  --color-muted: #8c8779;          /* 淡墨灰（取自 logo.svg 前山色 #8c8779） */
+  --color-border: rgba(47, 44, 40, 0.08);
 
   /* 字体 */
   --font-base: "Söhne", "Inter", "Helvetica Neue", Helvetica, Arial,
@@ -36,66 +36,66 @@
   --font-heading: "Tiempos Headline", Georgia, "Times New Roman",
     "Songti SC", "SimSun", serif;
 
-  /* UI 细节 — Claude 风格圆角 + 缓动曲线 */
+  /* UI 细节 — 圆角 + 缓动 */
   --radius: 12px;
   --radius-sm: 8px;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --code-bg: rgba(193, 95, 60, 0.06);
+  --code-bg: rgba(27, 54, 93, 0.06);
   --max-width: 1100px;
 
   /* 阴影层级 */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
-  --shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 1px 2px rgba(47, 44, 40, 0.02);
+  --shadow: 0 2px 8px rgba(47, 44, 40, 0.04);
+  --shadow-lg: 0 4px 16px rgba(47, 44, 40, 0.06);
 
-  /* admonition 各类型色（浅色） */
-  --admonition-warn-bg: rgba(193, 95, 60, 0.08);
-  --admonition-warn-border: #c15f3c;
-  --admonition-info-bg: rgba(28, 107, 187, 0.06);
-  --admonition-info-border: #1c6bbb;
-  --admonition-note-bg: rgba(100, 116, 139, 0.06);
-  --admonition-note-border: #64748b;
-  --admonition-tip-bg: rgba(34, 197, 94, 0.06);
-  --admonition-tip-border: #22c55e;
+  /* admonition 各类型色（浅色，融入中式印泥朱砂红与竹绿色） */
+  --admonition-warn-bg: rgba(166, 58, 43, 0.06);
+  --admonition-warn-border: #A63A2B;  /* 朱砂红（印章色） */
+  --admonition-info-bg: rgba(27, 54, 93, 0.06);
+  --admonition-info-border: #1B365D;  /* 黛蓝 */
+  --admonition-note-bg: rgba(140, 135, 121, 0.06);
+  --admonition-note-border: #8c8779;  /* 淡墨灰 */
+  --admonition-tip-bg: rgba(59, 122, 87, 0.06);
+  --admonition-tip-border: #3B7A57;  /* 竹绿 */
 }
 
 /* =========================================
    深色模式
    ========================================= */
 :root[data-theme='dark'] {
-  --color-primary: #e89676;
-  --color-primary-dark: #d9805e;
-  --color-primary-darker: #cc6e4b;
-  --color-primary-darkest: #b85a38;
-  --color-primary-light: #f0aa8f;
+  --color-primary: #6A93C8;        /* 亮黛蓝 */
+  --color-primary-dark: #4C74A8;
+  --color-primary-darker: #3E618E;
+  --color-primary-darkest: #203F68;
+  --color-primary-light: #8EB1DD;
 
-  --color-accent: #5ba0e4;
-  --color-accent-dark: #428bd3;
-  --color-accent-light: #7db5eb;
+  --color-accent: #6A93C8;
+  --color-accent-dark: #4C74A8;
+  --color-accent-light: #8EB1DD;
 
-  --color-bg: #181716;
-  --color-surface: #232220;
-  --color-surface-muted: #2d2c2a;
+  --color-bg: #1E1C19;             /* 深老墨色底 */
+  --color-surface: #282521;
+  --color-surface-muted: #322f2a;
 
-  --color-text: #e8e6e3;
-  --color-heading: #f3f1ee;
-  --color-muted: #a5a09a;
-  --color-border: rgba(255, 255, 255, 0.06);
+  --color-text: #eae8dc;           /* 宣纸色字 */
+  --color-heading: #ffffff;
+  --color-muted: #8c8779;          /* 淡墨灰 */
+  --color-border: rgba(255, 255, 255, 0.08);
 
-  --code-bg: rgba(232, 150, 118, 0.1);
+  --code-bg: rgba(106, 147, 200, 0.1);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.15);
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.25);
 
-  --admonition-warn-bg: rgba(232, 150, 118, 0.1);
-  --admonition-warn-border: #e89676;
-  --admonition-info-bg: rgba(91, 160, 228, 0.1);
-  --admonition-info-border: #5ba0e4;
-  --admonition-note-bg: rgba(148, 163, 184, 0.1);
-  --admonition-note-border: #94a3b8;
-  --admonition-tip-bg: rgba(74, 222, 128, 0.1);
-  --admonition-tip-border: #4ade80;
+  --admonition-warn-bg: rgba(209, 90, 76, 0.1);
+  --admonition-warn-border: #D15A4C;
+  --admonition-info-bg: rgba(106, 147, 200, 0.1);
+  --admonition-info-border: #6A93C8;
+  --admonition-note-bg: rgba(165, 160, 154, 0.1);
+  --admonition-note-border: #a5a09a;
+  --admonition-tip-bg: rgba(94, 158, 122, 0.1);
+  --admonition-tip-border: #5E9E7A;
 }
 
 /* =========================================
